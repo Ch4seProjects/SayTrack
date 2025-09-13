@@ -1,0 +1,53 @@
+import * as yup from "yup";
+
+export const signUpSchema = yup.object({
+  name: yup
+    .string()
+    .required("Name is required")
+    .matches(
+      /^[A-Za-z]+(?:\s[A-Za-z]+)+$/,
+      "Please enter your full name (first and last)"
+    ),
+  email: yup
+    .string()
+    .required("Email is required")
+    .email("Enter a valid email address"),
+  year: yup
+    .string()
+    .required("Year is required")
+    .matches(/^\d{4}$/, "Year must be a 4-digit number")
+    .test(
+      "is-valid-year",
+      "Year must be between 1900 and 2100",
+      (value) =>
+        !value || (parseInt(value, 10) >= 1900 && parseInt(value, 10) <= 2100)
+    ),
+  section: yup
+    .string()
+    .required("Section is required")
+    .oneOf(["Section A", "Section B"], "Section is required"),
+  password: yup
+    .string()
+    .required("Password is required")
+    .matches(
+      /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{8,}$/,
+      "Password must be at least 8 characters long, include a number, a symbol, and an uppercase letter"
+    ),
+});
+
+export const loginSchema = yup.object({
+  email: yup
+    .string()
+    .required("Email is required")
+    .email("Enter a valid email address"),
+  password: yup
+    .string()
+    .required("Password is required")
+    .matches(
+      /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{8,}$/,
+      "Password must be at least 8 characters long, include a number, a symbol, and an uppercase letter"
+    ),
+});
+
+export type SignUpType = yup.InferType<typeof signUpSchema>;
+export type LoginType = yup.InferType<typeof loginSchema>;

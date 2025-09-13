@@ -3,6 +3,8 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { signUpSchema, SignUpType } from "@/app/utils/schema";
 import Link from "next/link";
 
 export default function Signup() {
@@ -11,55 +13,68 @@ export default function Signup() {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<{
-    name: string;
-    email: string;
-    year: string;
-    section: string;
-    password: string;
-  }>();
-  const onSubmit = (data: {
-    name: string;
-    email: string;
-    year: string;
-    section: string;
-    password: string;
-  }) => console.log(data);
+  } = useForm<SignUpType>({ resolver: yupResolver(signUpSchema) });
+  const onSubmit = (data: SignUpType) => console.log(data);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-      <Input
-        placeholder="Full Name"
-        type={"text"}
-        className="font-poppins text-lg p-7"
-        {...register("name")}
-      />
-      <Input
-        placeholder="Email"
-        type={"email"}
-        className="font-poppins text-lg p-7"
-        {...register("email")}
-      />
-      <div className="flex gap-4">
+      <div>
         <Input
-          placeholder="Year Level"
+          placeholder="Full Name"
           type={"text"}
           className="font-poppins text-lg p-7"
-          {...register("year")}
+          {...register("name")}
         />
-        <Input
-          placeholder="Section"
-          type={"text"}
-          className="font-poppins text-lg p-7"
-          {...register("section")}
-        />
+        {errors.name && (
+          <p className="text-red-500 text-sm">{errors.name.message}</p>
+        )}
       </div>
-      <Input
-        placeholder="Password"
-        type={"password"}
-        className="font-poppins text-lg p-7"
-        {...register("password")}
-      />
+      <div>
+        <Input
+          placeholder="Email"
+          type={"email"}
+          className="font-poppins text-lg p-7"
+          {...register("email")}
+        />
+        {errors.email && (
+          <p className="text-red-500 text-sm">{errors.email.message}</p>
+        )}
+      </div>
+      <div className="flex gap-4">
+        <div>
+          <Input
+            placeholder="Year Level"
+            type={"text"}
+            className="font-poppins text-lg p-7"
+            {...register("year")}
+          />
+          {errors.year && (
+            <p className="text-red-500 text-sm">{errors.year.message}</p>
+          )}
+        </div>
+        <div>
+          <Input
+            placeholder="Section"
+            type={"text"}
+            className="font-poppins text-lg p-7"
+            {...register("section")}
+          />
+          {errors.section && (
+            <p className="text-red-500 text-sm">{errors.section.message}</p>
+          )}
+        </div>
+      </div>
+      <div>
+        <Input
+          placeholder="Password"
+          type={"password"}
+          className="font-poppins text-lg p-7"
+          {...register("password")}
+        />
+        {errors.password && (
+          <p className="text-red-500 text-sm">{errors.password.message}</p>
+        )}
+      </div>
       <Button
         type="submit"
         className="w-full font-poppins text-lg p-7 bg-secondary active:bg-main"
