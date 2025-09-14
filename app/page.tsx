@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Button } from "./components/Button";
 
 export default function Landing() {
   return (
@@ -18,17 +18,10 @@ export default function Landing() {
           suscipit?
         </p>
         <Link href="/login" className="w-full">
-          <Button className="w-full font-poppins text-lg p-7 bg-main active:bg-secondary">
-            Login
-          </Button>
+          <Button label="Login" />
         </Link>
         <Link href="/signup" className="w-full">
-          <Button
-            className="w-full font-poppins text-lg p-7 border-2 border-secondary active:bg-main active:text-white"
-            variant="outline"
-          >
-            Signup
-          </Button>
+          <Button label="Signup" variant="outline" />
         </Link>
       </div>
     </div>

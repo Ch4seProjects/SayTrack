@@ -1,16 +1,25 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import Link from "next/link";
+
 import { Input } from "@/app/components/Input";
 import { Select } from "@/app/components/Select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/components/Button";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { signUpSchema, SignUpType } from "@/app/utils/schema";
-import Link from "next/link";
 import { ACCOUNT_TYPES } from "@/app/lib/constants";
+import { createBrowserSupabase } from "@/app/utils/client";
 
 export default function Signup() {
+  const supabase = createBrowserSupabase();
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
+
   const {
     register,
     handleSubmit,
@@ -22,8 +31,34 @@ export default function Signup() {
     },
     resolver: yupResolver(signUpSchema),
   });
-  const onSubmit = (data: SignUpType) => console.log(data);
 
+  const onSubmit = async (data: SignUpType) => {
+    setLoading(true);
+    setServerError(null);
+
+    const { data: signUpData, error } = await supabase.auth.signUp({
+      email: data.email,
+      password: data.password,
+      options: {
+        data: {
+          name: data.name,
+          type: data.type,
+          year: data.year,
+          section: data.section,
+        },
+      },
+    });
+
+    setLoading(false);
+    console.log("signUpData", signUpData);
+
+    if (error) {
+      setServerError(error.message);
+      return;
+    }
+
+    router.push("/login");
+  };
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
       <Controller
@@ -90,12 +125,7 @@ export default function Signup() {
         {...register("password")}
         error={errors.password?.message}
       />
-      <Button
-        type="submit"
-        className="w-full font-poppins text-lg p-7 bg-main text-white"
-      >
-        Submit
-      </Button>
+      <Button type="submit" loading={loading} label="Submit" />
       <p className="text-xs text-white font-poppins text-center">
         Already have an account?{" "}
         <Link href="/login" className="font-semibold text-main">
