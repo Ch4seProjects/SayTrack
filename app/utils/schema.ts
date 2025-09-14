@@ -1,6 +1,11 @@
 import * as yup from "yup";
+import { SECTIONS, ACCOUNT_TYPES } from "../lib/constants";
 
 export const signUpSchema = yup.object({
+  type: yup
+    .string()
+    .required("Type is required")
+    .oneOf(ACCOUNT_TYPES, "Invalid type"),
   name: yup
     .string()
     .required("Name is required")
@@ -25,7 +30,7 @@ export const signUpSchema = yup.object({
   section: yup
     .string()
     .required("Section is required")
-    .oneOf(["Section A", "Section B"], "Section is required"),
+    .oneOf(SECTIONS, "Invalid section"),
   password: yup
     .string()
     .required("Password is required")

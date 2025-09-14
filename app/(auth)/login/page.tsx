@@ -1,6 +1,7 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
+// import { Input } from "@/components/ui/input";
+import { Input } from "@/app/components/Input";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -17,29 +18,19 @@ export default function Login() {
   const onSubmit = (data: LoginType) => console.log(data);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-      <div>
-        <Input
-          placeholder="Email"
-          type={"email"}
-          className="font-poppins text-lg p-7"
-          {...register("email")}
-        />
-        {errors.email && (
-          <p className="text-red-500 text-sm">{errors.email.message}</p>
-        )}
-      </div>
-      <div>
-        <Input
-          placeholder="Password"
-          type={"password"}
-          className="font-poppins text-lg p-7"
-          {...register("password")}
-        />
-        {errors.password && (
-          <p className="text-red-500 text-sm">{errors.password.message}</p>
-        )}
-      </div>
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+      <Input
+        placeholder="Email"
+        type={"email"}
+        {...register("email")}
+        error={errors.email?.message}
+      />
+      <Input
+        placeholder="Password"
+        type={"password"}
+        {...register("password")}
+        error={errors.password?.message}
+      />
       <Button
         type="submit"
         className="w-full font-poppins text-lg p-7 bg-secondary active:bg-main"
