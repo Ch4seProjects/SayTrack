@@ -10,7 +10,7 @@ const headerText = {
     subheader: "Enter your email and password to login.",
   },
   signup: {
-    header: "Create a new account",
+    header: "Create account",
     subheader: "Please fill in the forms to continue.",
   },
 };
@@ -26,13 +26,20 @@ export default function AuthLayout({
   const { header, subheader } = headerText[page];
 
   return (
-    <main className="border-2 border-red-600 h-screen flex flex-col gap-6 p-6 pt-12">
-      <ChevronLeft onClick={() => router.push("/")} />
-      <div>
-        <p className="text-3xl font-poppins">{header}</p>
-        <p className="text-xs font-poppins">{subheader}</p>
+    <main className="h-screen flex flex-col justify-center items-center p-6 relative bg-linear-to-t from-secondary to-main">
+      <ChevronLeft
+        onClick={() => router.push("/")}
+        className="absolute top-12 left-6 text-white"
+      />
+      <div className="flex flex-col w-full gap-6">
+        <div className="flex flex-col gap-2">
+          <p className="text-4xl font-poppins font-semibold text-white">
+            {header}
+          </p>
+          <p className="text-xs font-poppins text-white">{subheader}</p>
+        </div>
+        {children}
       </div>
-      {children}
     </main>
   );
 }

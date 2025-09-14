@@ -33,13 +33,16 @@ export default function Login() {
       />
       <Button
         type="submit"
-        className="w-full font-poppins text-lg p-7 bg-secondary active:bg-main"
+        className="w-full font-poppins text-lg p-7 bg-main text-white"
       >
         Submit
       </Button>
 
-      <p className="text-xs font-poppins text-center">
-        Don't have an account? <Link href="/signup">Signup</Link>
+      <p className="text-xs text-white font-poppins text-center">
+        Don't have an account?{" "}
+        <Link href="/signup" className="font-semibold text-main ">
+          Signup
+        </Link>
       </p>
     </form>
   );

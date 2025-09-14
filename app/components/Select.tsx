@@ -22,7 +22,7 @@ export function Select({ value, onChange, error, placeholder }: SelectProps) {
         <SelectTrigger
           className={`${
             error ? "border-2 border-red-600" : ""
-          } w-full font-poppins text-lg p-7`}
+          } bg-white w-full font-poppins text-lg p-7`}
         >
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>

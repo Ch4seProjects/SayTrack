@@ -41,7 +41,8 @@ export default function Signup() {
                   <TabsTrigger
                     key={type}
                     value={type}
-                    className="font-poppins text-lg p-3"
+                    className="font-poppins text-md p-3 uppercase 
+                   data-[state=active]:bg-main data-[state=active]:text-white"
                   >
                     {type}
                   </TabsTrigger>
@@ -91,12 +92,15 @@ export default function Signup() {
       />
       <Button
         type="submit"
-        className="w-full font-poppins text-lg p-7 bg-secondary active:bg-main"
+        className="w-full font-poppins text-lg p-7 bg-main text-white"
       >
         Submit
       </Button>
-      <p className="text-xs font-poppins text-center">
-        Already have an account? <Link href="/login">Login</Link>
+      <p className="text-xs text-white font-poppins text-center">
+        Already have an account?{" "}
+        <Link href="/login" className="font-semibold text-main">
+          Login
+        </Link>
       </p>
     </form>
   );
