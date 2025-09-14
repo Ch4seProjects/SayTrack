@@ -7,6 +7,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { SECTIONS } from "../lib/constants";
+import { cn } from "@/lib/utils";
 
 interface SelectProps {
   value?: string;
@@ -20,9 +21,10 @@ export function Select({ value, onChange, error, placeholder }: SelectProps) {
     <div className="w-full relative">
       <ShadcnSelect value={value} onValueChange={onChange}>
         <SelectTrigger
-          className={`${
-            error ? "border-2 border-red-600" : ""
-          } bg-white w-full font-poppins text-lg p-7`}
+          className={cn(
+            "bg-white w-full font-poppins text-lg p-7",
+            error && "border-2 border-red-600"
+          )}
         >
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
