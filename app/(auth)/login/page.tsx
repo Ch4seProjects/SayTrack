@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 
-import { SyncLoader } from "react-spinners";
+import toast from "react-hot-toast";
 import { Input } from "@/app/components/Input";
 import { Button } from "@/app/components/Button";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -17,7 +17,6 @@ export default function Login() {
   const supabase = createBrowserSupabase();
 
   const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
 
   const {
     register,
@@ -28,7 +27,6 @@ export default function Login() {
 
   const onSubmit = async (data: LoginType) => {
     setLoading(true);
-    setErrorMsg("");
 
     const { email, password } = data;
 
@@ -38,11 +36,12 @@ export default function Login() {
     });
 
     if (error) {
-      setErrorMsg(error.message);
+      toast.error(error.message);
       setLoading(false);
       return;
     }
 
+    toast.success("Login Successful");
     router.push("/home");
   };
 

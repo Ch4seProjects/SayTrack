@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Poppins } from "next/font/google";
 import "./styles/globals.css";
 import { cn } from "@/lib/utils";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,6 +40,22 @@ export default function RootLayout({
           "antialiased"
         )}
       >
+        <Toaster
+          position="top-center"
+          reverseOrder={false}
+          gutter={8}
+          containerClassName=""
+          containerStyle={{}}
+          toastOptions={{
+            // Define default options
+            className: "",
+            duration: 3000,
+            style: {
+              fontFamily: "Poppins",
+              padding: "8px",
+            },
+          }}
+        />
         {children}
       </body>
     </html>

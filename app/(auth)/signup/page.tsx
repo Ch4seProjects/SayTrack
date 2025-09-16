@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 
+import toast from "react-hot-toast";
 import { Input } from "@/app/components/Input";
 import { Select } from "@/app/components/Select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -18,7 +19,6 @@ export default function Signup() {
   const supabase = createBrowserSupabase();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [serverError, setServerError] = useState<string | null>(null);
 
   const {
     register,
@@ -34,7 +34,6 @@ export default function Signup() {
 
   const onSubmit = async (data: SignUpType) => {
     setLoading(true);
-    setServerError(null);
 
     const { data: signUpData, error } = await supabase.auth.signUp({
       email: data.email,
@@ -53,10 +52,11 @@ export default function Signup() {
     console.log("signUpData", signUpData);
 
     if (error) {
-      setServerError(error.message);
+      toast.error(error.message);
       return;
     }
 
+    toast.success("Signup Successful");
     router.push("/login");
   };
   return (
