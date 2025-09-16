@@ -42,3 +42,30 @@ export function Select({ value, onChange, error, placeholder }: SelectProps) {
     </div>
   );
 }
+
+interface SelectComponentProps {
+  category: string;
+  setCategory: (category: string) => void;
+  entries: string[];
+}
+
+export function SelectComponent({
+  category,
+  setCategory,
+  entries,
+}: SelectComponentProps) {
+  return (
+    <ShadcnSelect value={category} onValueChange={setCategory}>
+      <SelectTrigger className="bg-white border-none w-[100px] font-poppins text-xs">
+        <SelectValue placeholder="Select category" />
+      </SelectTrigger>
+      <SelectContent>
+        {entries.map((c) => (
+          <SelectItem key={c} value={c} className="font-poppins">
+            {c}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </ShadcnSelect>
+  );
+}

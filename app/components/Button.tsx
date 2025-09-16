@@ -1,27 +1,30 @@
-import {
-  Button as ShadcnButton,
-  type buttonVariants,
-} from "@/components/ui/button";
-import type { VariantProps } from "class-variance-authority";
+import { Button as ShadcnButton } from "@/components/ui/button";
 import { SyncLoader } from "react-spinners";
 import { cn } from "@/lib/utils";
 
-interface ButtonProps
-  extends React.ComponentProps<"button">,
-    VariantProps<typeof buttonVariants> {
+interface ButtonProps extends React.ComponentProps<"button"> {
   loading?: boolean;
   label?: string;
   asChild?: boolean;
+  variant?: "outline" | "solid";
 }
 
-export function Button({ loading, label, children, ...props }: ButtonProps) {
+export function Button({
+  loading,
+  label,
+  children,
+  variant = "solid",
+  ...props
+}: ButtonProps) {
   return (
     <ShadcnButton
       {...props}
       disabled={loading || props.disabled}
       className={cn(
-        "w-full font-poppins text-lg p-7 bg-main text-white",
-        "font-poppins text-lg"
+        "w-full font-poppins text-lg p-7",
+        variant === "solid"
+          ? "bg-main text-white"
+          : "border-2 border-main bg-transparent text-main"
       )}
     >
       {loading ? (

@@ -24,13 +24,16 @@ export default function Signup() {
     register,
     handleSubmit,
     control,
+    watch,
     formState: { errors },
   } = useForm<SignUpType>({
     defaultValues: {
       type: "student",
     },
-    resolver: yupResolver(signUpSchema),
+    resolver: yupResolver(signUpSchema) as any, //:)
   });
+
+  const accountType = watch("type");
 
   const onSubmit = async (data: SignUpType) => {
     setLoading(true);
@@ -99,26 +102,29 @@ export default function Signup() {
         {...register("email")}
         error={errors.email?.message}
       />
-      <div className="flex gap-4">
-        <Input
-          placeholder="Year Level"
-          type={"text"}
-          {...register("year")}
-          error={errors.year?.message}
-        />
-        <Controller
-          name="section"
-          control={control}
-          render={({ field }) => (
-            <Select
-              value={field.value}
-              onChange={field.onChange}
-              error={errors.section?.message}
-              placeholder="Section"
-            />
-          )}
-        />
-      </div>
+      {accountType === "student" && (
+        <div className="flex gap-4">
+          <Input
+            placeholder="Year Level"
+            type={"text"}
+            {...register("year")}
+            error={errors.year?.message}
+          />
+          <Controller
+            name="section"
+            control={control}
+            render={({ field }) => (
+              <Select
+                value={field.value}
+                onChange={field.onChange}
+                error={errors.section?.message}
+                placeholder="Section"
+              />
+            )}
+          />
+        </div>
+      )}
+
       <Input
         placeholder="Password"
         type={"password"}

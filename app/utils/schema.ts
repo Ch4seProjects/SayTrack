@@ -19,18 +19,31 @@ export const signUpSchema = yup.object({
     .email("Enter a valid email address"),
   year: yup
     .string()
-    .required("Year is required")
-    .matches(/^\d{4}$/, "Year must be a 4-digit number")
-    .test(
-      "is-valid-year",
-      "Year must be between 1900 and 2100",
-      (value) =>
-        !value || (parseInt(value, 10) >= 1900 && parseInt(value, 10) <= 2100)
-    ),
+    .when("type", {
+      is: "student",
+      then: (schema) =>
+        schema
+          .required("Year is required")
+          .matches(/^\d{4}$/, "Year must be a 4-digit number")
+          .test(
+            "is-valid-year",
+            "Year must be between 1900 and 2100",
+            (value) =>
+              !value ||
+              (parseInt(value, 10) >= 1900 && parseInt(value, 10) <= 2100)
+          ),
+      otherwise: (schema) => schema.strip(),
+    }),
   section: yup
     .string()
-    .required("Section is required")
-    .oneOf(SECTIONS, "Invalid section"),
+    .when("type", {
+      is: "student",
+      then: (schema) =>
+        schema
+          .required("Section is required")
+          .oneOf(SECTIONS, "Invalid section"),
+      otherwise: (schema) => schema.strip(),
+    }),
   password: yup
     .string()
     .required("Password is required")
