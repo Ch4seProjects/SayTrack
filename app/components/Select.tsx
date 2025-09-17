@@ -56,7 +56,7 @@ export function SelectComponent({
 }: SelectComponentProps) {
   return (
     <ShadcnSelect value={category} onValueChange={setCategory}>
-      <SelectTrigger className="bg-white border-none w-[100px] font-poppins text-xs">
+      <SelectTrigger className="bg-main border-none w-[100px] font-poppins text-xs text-white">
         <SelectValue placeholder="Select category" />
       </SelectTrigger>
       <SelectContent>

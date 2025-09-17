@@ -22,8 +22,8 @@ export default function AppLayout({
   const pathname = usePathname();
 
   return (
-    <main className="flex flex-col h-screen">
-      <div className="content flex-1">{children}</div>
+    <main className="bg-secondary flex flex-col h-screen">
+      <div className="content flex-1 overflow-auto">{children}</div>
 
       <div className="bottom-navigation flex justify-around p-4 bg-gradient-to-t from-secondary to-main">
         {navItems.map(({ icon: Icon, route }) => (
