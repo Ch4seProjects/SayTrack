@@ -47,16 +47,23 @@ interface SelectComponentProps {
   category: string;
   setCategory: (category: string) => void;
   entries: string[];
+  backgroundColor?: string;
 }
 
 export function SelectComponent({
   category,
   setCategory,
   entries,
+  backgroundColor = "bg-main",
 }: SelectComponentProps) {
   return (
     <ShadcnSelect value={category} onValueChange={setCategory}>
-      <SelectTrigger className="bg-main border-none w-[100px] font-poppins text-xs text-white">
+      <SelectTrigger
+        className={cn(
+          "border-none w-[100px] font-poppins text-xs text-white",
+          backgroundColor
+        )}
+      >
         <SelectValue placeholder="Select category" />
       </SelectTrigger>
       <SelectContent>

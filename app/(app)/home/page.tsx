@@ -5,10 +5,10 @@ import { SelectComponent } from "@/app/components/Select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
 
-const LEADERBOARD_CATEGORIES = ["Section", "Batch"];
+const LEADERBOARD_CATEGORIES = ["SECTION", "BATCH"];
 
 export default function Home() {
-  const [category, setCategory] = useState("Section");
+  const [category, setCategory] = useState("SECTION");
 
   return (
     <div className="px-6 py-12 flex flex-col gap-8">
@@ -75,7 +75,7 @@ export default function Home() {
                 <TabsTrigger
                   key={type}
                   value={type}
-                  className="font-poppins text-xs text-secondary
+                  className="font-poppins text-xs text-gray-600
                    data-[state=active]:bg-main data-[state=active]:text-white"
                 >
                   {type}
@@ -118,7 +118,9 @@ export default function Home() {
                 key={index}
               >
                 <div className="w-10 h-10 bg-white rounded-full" />
-                <p className="font-poppins text-white text-sm">John</p>
+                <p className="font-poppins text-white text-sm text-center">
+                  John
+                </p>
               </div>
             ))}
         </div>
@@ -138,7 +140,9 @@ export default function Home() {
                 key={index}
               >
                 <div className="w-10 h-10 bg-white rounded-full" />
-                <p className="font-poppins text-white text-sm">Science</p>
+                <p className="font-poppins text-white text-sm text-center">
+                  Science
+                </p>
               </div>
             ))}
         </div>
