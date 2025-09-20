@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-const NOTIFICATION_CATEGORIES = ["GENERAL", "CLUB"];
+import { NOTIFICATION_CATEGORIES } from "@/app/lib/constants";
 
 export default function Notifications() {
   const [category, setCategory] = useState("GENERAL");

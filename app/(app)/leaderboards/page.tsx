@@ -2,11 +2,16 @@
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
-
-const LEADERBOARD_CATEGORIES = ["Section", "Batch"];
+import { LEADERBOARD_CATEGORIES } from "@/app/lib/constants";
+import { dummyUsers } from "@/app/lib/constants";
+import { rankUsers } from "@/app/utils/rankUsers";
+import Link from "next/link";
 
 export default function Leaderboards() {
-  const [category, setCategory] = useState("Section");
+  const [category, setCategory] = useState("SECTION");
+  const rankedUsers = rankUsers(dummyUsers);
+
+  const podium = [rankedUsers[1], rankedUsers[0], rankedUsers[2]];
 
   return (
     <div className="flex flex-col h-full">
@@ -39,60 +44,65 @@ export default function Leaderboards() {
 
         {/* Top 3 */}
         <div className="flex justify-between">
-          <div className="flex flex-col items-center gap-1 mt-8">
-            <div className="h-24 w-24 bg-white rounded-full mb-2 relative">
-              <div className="h-6 w-6 left-2 bg-gray-400 rounded-full absolute" />
-            </div>
-            <p className="font-poppins text-sm text-white font-medium">
-              Pedro John
-            </p>
-            <p className="font-poppins text-xs text-white">Galileo 2025</p>
-            <p className="font-poppins text-sm text-white font-medium">4,200</p>
-          </div>
-          <div className="flex flex-col items-center gap-1">
-            <div className="h-24 w-24 bg-white rounded-full mb-2 relative">
-              <div className="h-6 w-6 left-2 bg-yellow-400 rounded-full absolute" />
-            </div>
-            <p className="font-poppins text-sm text-white font-medium">
-              Pedro John
-            </p>
-            <p className="font-poppins text-xs text-white">Galileo 2025</p>
-            <p className="font-poppins text-sm text-white font-medium">4,200</p>
-          </div>
-          <div className="flex flex-col items-center gap-1 mt-12">
-            <div className="h-24 w-24 bg-white rounded-full mb-2 relative">
-              <div className="h-6 w-6 left-2 bg-amber-800 rounded-full absolute" />
-            </div>
-            <p className="font-poppins text-sm text-white font-medium">
-              Pedro John
-            </p>
-            <p className="font-poppins text-xs text-white">Galileo 2025</p>
-            <p className="font-poppins text-sm text-white font-medium">4,200</p>
-          </div>
+          {podium.map((user, index) => {
+            const medalColors = [
+              "bg-gray-400",
+              "bg-yellow-400",
+              "bg-amber-800",
+            ];
+            const marginTop =
+              index === 1 ? "mt-0" : index === 0 ? "mt-8" : "mt-12";
+
+            console.log("index: ", index);
+
+            return (
+              <Link
+                key={user.username}
+                href={`/profile/${user.username}`}
+                className={`flex flex-col items-center gap-1 ${marginTop}`}
+              >
+                <div className="h-24 w-24 bg-white rounded-full mb-2 relative">
+                  <div
+                    className={`h-6 w-6 left-2 ${medalColors[index]} rounded-full absolute`}
+                  />
+                </div>
+                <p className="font-poppins text-sm text-white font-medium">
+                  {user.name}
+                </p>
+                <p className="font-poppins text-xs text-white">
+                  {user.section} {user.year}
+                </p>
+                <p className="font-poppins text-sm text-white font-medium">
+                  {user.points.toLocaleString()}
+                </p>
+              </Link>
+            );
+          })}
         </div>
       </div>
 
       {/* Leaderboard */}
       <div className="bg-gradient-to-t from-secondary to-main flex-1 rounded-tl-xl rounded-tr-xl p-6 flex flex-col gap-4 overflow-auto">
-        {Array.from({ length: 7 }).map((_, index) => (
-          <div
+        {rankedUsers.slice(3, 10).map((user, index) => (
+          <Link
             className="bg-white p-4 rounded-md flex gap-4 items-center"
-            key={index}
+            key={user.username}
+            href={`/profile/${user.username}`}
           >
-            <p className="font-poppins text-sm font-medium">4</p>
+            <p className="font-poppins text-sm font-medium">{index + 4}</p>
             <div className="flex gap-2 items-center">
               <div className="h-10 w-10 bg-main rounded-full" />
               <div className="flex flex-col">
-                <p className="font-poppins font-medium text-sm">
-                  Juan Dela Cruz
+                <p className="font-poppins font-medium text-sm">{user.name}</p>
+                <p className="font-poppins text-xs">
+                  {user.section} {user.year}
                 </p>
-                <p className="font-poppins text-xs">Galileo 2025</p>
               </div>
             </div>
             <p className="font-poppins font-semibold text-xs flex-1 text-end">
-              3,000
+              {user.points.toLocaleString()}
             </p>
-          </div>
+          </Link>
         ))}
       </div>
     </div>

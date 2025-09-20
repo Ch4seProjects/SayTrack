@@ -4,11 +4,13 @@ import { Bell } from "lucide-react";
 import { SelectComponent } from "@/app/components/Select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
-
-const LEADERBOARD_CATEGORIES = ["SECTION", "BATCH"];
+import { LEADERBOARD_CATEGORIES, dummyUsers } from "@/app/lib/constants";
+import { rankUsers } from "@/app/utils/rankUsers";
+import Link from "next/link";
 
 export default function Home() {
   const [category, setCategory] = useState("SECTION");
+  const rankedUsers = rankUsers(dummyUsers);
 
   return (
     <div className="px-6 py-12 flex flex-col gap-8">
@@ -91,14 +93,17 @@ export default function Home() {
               Points
             </p>
           </div>
-          {Array.from({ length: 5 }).map((_, index) => (
-            <div
+          {rankedUsers.slice(0, 5).map((user, index) => (
+            <Link
               key={index}
+              href={`/profile/${user.username}`}
               className="bg-white p-2 rounded-sm flex justify-between items-center"
             >
-              <p className="font-poppins text-xs text-secondary">John Doe</p>
-              <p className="font-poppins text-xs text-secondary">3,200</p>
-            </div>
+              <p className="font-poppins text-xs text-secondary">{user.name}</p>
+              <p className="font-poppins text-xs text-secondary">
+                {user.points.toLocaleString()}
+              </p>
+            </Link>
           ))}
         </div>
         <p className="text-gray-600 text-xs font-poppins self-end">view more</p>

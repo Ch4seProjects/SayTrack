@@ -1,4 +1,6 @@
+import Link from "next/link";
 import { Search as SearchIcon } from "lucide-react";
+import { dummyUsers } from "@/app/lib/constants";
 
 export default function Search() {
   return (
@@ -18,16 +20,20 @@ export default function Search() {
 
       {/* Search Results */}
       <div className="flex flex-col gap-4">
-        {Array.from({ length: 5 }).map((_, index) => (
-          <div className="flex gap-2 items-center p-2" key={index}>
+        {dummyUsers.map((user) => (
+          <Link
+            href={`/profile/${user.username}`}
+            key={user.username}
+            className="flex gap-2 items-center p-2 hover:bg-gray-800 rounded-md transition"
+          >
             <div className="h-10 w-10 bg-white rounded-full" />
             <div className="flex flex-col">
               <p className="text-white font-poppins font-medium text-sm">
-                Juan Dela Cruz
+                {user.name}
               </p>
-              <p className="text-white font-poppins text-xs">Galileo 2025</p>
+              <p className="text-white font-poppins text-xs">{`${user.section} ${user.year}`}</p>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>
