@@ -5,12 +5,17 @@ import { SelectComponent } from "@/app/components/Select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
 import { LEADERBOARD_CATEGORIES, dummyUsers } from "@/app/lib/constants";
-import { rankUsers } from "@/app/utils/rankUsers";
+import { rankUsers } from "@/app/utils/deriveUsers";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useUserMeta } from "@/app/hooks/useUserMeta";
 
 export default function Home() {
   const [category, setCategory] = useState("SECTION");
+  const router = useRouter();
   const rankedUsers = rankUsers(dummyUsers);
+  const user = dummyUsers[0];
+  const userMeta = useUserMeta(user);
 
   return (
     <div className="px-6 py-12 flex flex-col gap-8">
@@ -18,8 +23,15 @@ export default function Home() {
       <div className="flex justify-between items-center">
         <p className="text-white font-poppins text-xl">Home</p>
         <div className="flex justify-between items-center gap-4">
-          <Bell className="text-white" fill="white" />
-          <div className="w-10 h-10 bg-white rounded-full" />
+          <Bell
+            className="text-white"
+            fill="white"
+            onClick={() => router.push("/notifications")}
+          />
+          <div
+            className="w-10 h-10 bg-white rounded-full"
+            onClick={() => router.push("/profile")}
+          />
         </div>
       </div>
 
@@ -28,7 +40,7 @@ export default function Home() {
         <div className="flex flex-col gap-2">
           <p className="text-white font-poppins text-xs">Total points earned</p>
           <p className="text-white font-poppins text-7xl font-semibold">
-            2,000
+            {userMeta.totalPoints.toLocaleString()}
           </p>
         </div>
         <div className="flex flex-col items-center gap-2">
@@ -53,13 +65,17 @@ export default function Home() {
             <p className="font-poppins text-xs font-medium text-white">
               Character
             </p>
-            <p className="font-poppins text-xs text-white">1,200</p>
+            <p className="font-poppins text-xs text-white">
+              {userMeta.points.character.toLocaleString()}
+            </p>
           </div>
           <div className="flex flex-col">
             <p className="font-poppins text-xs font-medium text-white">
               Participation
             </p>
-            <p className="font-poppins text-xs text-white">800</p>
+            <p className="font-poppins text-xs text-white">
+              {userMeta.points.participation.toLocaleString()}
+            </p>
           </div>
         </div>
         <div className="progress-bar rounded-lg h-6 bg-white" />
@@ -101,12 +117,17 @@ export default function Home() {
             >
               <p className="font-poppins text-xs text-secondary">{user.name}</p>
               <p className="font-poppins text-xs text-secondary">
-                {user.points.toLocaleString()}
+                {user.totalPoints.toLocaleString()}
               </p>
             </Link>
           ))}
         </div>
-        <p className="text-gray-600 text-xs font-poppins self-end">view more</p>
+        <Link
+          href={"/leaderboards"}
+          className="text-gray-600 text-xs font-poppins self-end"
+        >
+          view more
+        </Link>
       </div>
 
       {/* People you follow */}
@@ -115,19 +136,18 @@ export default function Home() {
           People you follow
         </p>
         <div className="flex gap-5 overflow-auto pb-4">
-          {Array(10)
-            .fill(0)
-            .map((_, index) => (
-              <div
-                className="flex flex-col justify-center items-center gap-1"
-                key={index}
-              >
-                <div className="w-10 h-10 bg-white rounded-full" />
-                <p className="font-poppins text-white text-sm text-center">
-                  John
-                </p>
-              </div>
-            ))}
+          {userMeta.following.map((user, index) => (
+            <Link
+              href={`/profile/${user.username}`}
+              className="flex flex-col justify-center items-center gap-1"
+              key={index}
+            >
+              <div className="w-10 h-10 bg-white rounded-full" />
+              <p className="font-poppins text-white text-sm text-center">
+                {user.username}
+              </p>
+            </Link>
+          ))}
         </div>
       </div>
 
@@ -137,19 +157,17 @@ export default function Home() {
           Joined Clubs
         </p>
         <div className="flex gap-5 overflow-auto pb-4">
-          {Array(3)
-            .fill(0)
-            .map((_, index) => (
-              <div
-                className="flex flex-col justify-center items-center gap-1"
-                key={index}
-              >
-                <div className="w-10 h-10 bg-white rounded-full" />
-                <p className="font-poppins text-white text-sm text-center">
-                  Science
-                </p>
-              </div>
-            ))}
+          {userMeta.clubs.map((club, index) => (
+            <div
+              className="flex flex-col justify-center items-center gap-1"
+              key={index}
+            >
+              <div className="w-10 h-10 bg-white rounded-full" />
+              <p className="font-poppins text-white text-sm text-center">
+                {club.name}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     </div>

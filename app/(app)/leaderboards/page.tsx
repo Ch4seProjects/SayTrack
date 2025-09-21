@@ -4,7 +4,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
 import { LEADERBOARD_CATEGORIES } from "@/app/lib/constants";
 import { dummyUsers } from "@/app/lib/constants";
-import { rankUsers } from "@/app/utils/rankUsers";
+import { rankUsers } from "@/app/utils/deriveUsers";
 import Link from "next/link";
 
 export default function Leaderboards() {
@@ -73,7 +73,7 @@ export default function Leaderboards() {
                   {user.section} {user.year}
                 </p>
                 <p className="font-poppins text-sm text-white font-medium">
-                  {user.points.toLocaleString()}
+                  {user.totalPoints.toLocaleString()}
                 </p>
               </Link>
             );
@@ -100,7 +100,7 @@ export default function Leaderboards() {
               </div>
             </div>
             <p className="font-poppins font-semibold text-xs flex-1 text-end">
-              {user.points.toLocaleString()}
+              {user.totalPoints.toLocaleString()}
             </p>
           </Link>
         ))}

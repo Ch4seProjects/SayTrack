@@ -1,6 +1,31 @@
 export type Section = "Newton" | "Bernoulli" | "Galileo" | "Charles" | "Boyle";
 export type UserType = "student" | "admin";
 
+export interface Points {
+  character: number;
+  participation: number;
+}
+
+export interface Achievement {
+  title: string;
+}
+
+export interface Title {
+  title: string;
+}
+
+export interface Club {
+  name: string;
+}
+
+export interface Following {
+  username: string;
+}
+
+export interface Followers {
+  username: string;
+}
+
 export interface User {
   type: UserType;
   username: string;
@@ -8,5 +33,10 @@ export interface User {
   email: string;
   year: number;
   section: Section;
-  points: number;
+  points: Points;
+  achievements: Achievement[];
+  titles: Title[];
+  clubs: Club[];
+  following: Following[];
+  followers: Followers[];
 }
