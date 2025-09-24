@@ -6,6 +6,7 @@ import { LEADERBOARD_CATEGORIES } from "@/app/lib/constants";
 import { dummyUsers } from "@/app/lib/constants";
 import { rankUsers } from "@/app/utils/deriveUsers";
 import Link from "next/link";
+import { User } from "lucide-react";
 
 export default function Leaderboards() {
   const [category, setCategory] = useState("SECTION");
@@ -57,13 +58,14 @@ export default function Leaderboards() {
 
             return (
               <Link
-                key={user.username}
-                href={`/profile/${user.username}`}
+                key={user.id}
+                href={`/profile/${user.id}`}
                 className={`flex flex-col items-center gap-1 ${marginTop}`}
               >
-                <div className="h-24 w-24 bg-white rounded-full mb-2 relative">
+                <div className="h-24 w-24 bg-white rounded-full flex justify-center items-center mb-2 relative">
+                  <User className="h-16 w-16 text-main" />
                   <div
-                    className={`h-6 w-6 left-2 ${medalColors[index]} rounded-full absolute`}
+                    className={`h-6 w-6 left-0 top-0 ${medalColors[index]} rounded-full absolute`}
                   />
                 </div>
                 <p className="font-poppins text-sm text-white font-medium">
@@ -86,12 +88,14 @@ export default function Leaderboards() {
         {rankedUsers.slice(3, 10).map((user, index) => (
           <Link
             className="bg-white p-4 rounded-md flex gap-4 items-center"
-            key={user.username}
-            href={`/profile/${user.username}`}
+            key={user.id}
+            href={`/profile/${user.id}`}
           >
             <p className="font-poppins text-sm font-medium">{index + 4}</p>
             <div className="flex gap-2 items-center">
-              <div className="h-10 w-10 bg-main rounded-full" />
+              <div className="h-10 w-10 bg-main rounded-full flex justify-center items-center">
+                <User className="text-white" />
+              </div>
               <div className="flex flex-col">
                 <p className="font-poppins font-medium text-sm">{user.name}</p>
                 <p className="font-poppins text-xs">

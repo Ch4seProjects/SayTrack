@@ -19,16 +19,16 @@ export interface Club {
 }
 
 export interface Following {
-  username: string;
+  id: string;
 }
 
 export interface Followers {
-  username: string;
+  id: string;
 }
 
 export interface User {
   type: UserType;
-  username: string;
+  id: string;
   name: string;
   email: string;
   year: number;
@@ -39,4 +39,10 @@ export interface User {
   clubs: Club[];
   following: Following[];
   followers: Followers[];
+}
+
+export interface UserMeta extends User {
+  totalPoints: number;
+  characterPercent: number;
+  participationPercent: number;
 }

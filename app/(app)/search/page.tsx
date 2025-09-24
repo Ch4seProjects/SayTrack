@@ -22,8 +22,8 @@ export default function Search() {
       <div className="flex flex-col gap-4">
         {dummyUsers.map((user) => (
           <Link
-            href={`/profile/${user.username}`}
-            key={user.username}
+            href={`/profile/${user.id}`}
+            key={user.id}
             className="flex gap-2 items-center p-2 hover:bg-gray-800 rounded-md transition"
           >
             <div className="h-10 w-10 bg-white rounded-full" />

@@ -13,9 +13,9 @@ export default function Landing() {
       </div>
       <div className="buttons flex flex-col justify-center items-center gap-2 w-full mt-auto px-6 py-8 bg-white">
         <p className="text-center font-poppins text-sm mb-8">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis at
-          ullam, quasi repellat ipsum quisquam accusamus velit delectus dolore
-          suscipit?
+          SayTrack is a student-centered platform designed to turn learning into
+          an engaging journey. Track your progress, celebrate achievements, and
+          climb leaderboards while staying focused and motivated.
         </p>
         <Link href="/login" className="w-full">
           <Button label="Login" />

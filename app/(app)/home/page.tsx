@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell } from "lucide-react";
+import { Bell, CircleUserRound } from "lucide-react";
 import { SelectComponent } from "@/app/components/Select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
@@ -9,6 +9,7 @@ import { rankUsers } from "@/app/utils/deriveUsers";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useUserMeta } from "@/app/hooks/useUserMeta";
+import ArrayDataWrapper from "@/app/components/ArrayDataWrapper";
 
 export default function Home() {
   const [category, setCategory] = useState("SECTION");
@@ -28,8 +29,8 @@ export default function Home() {
             fill="white"
             onClick={() => router.push("/notifications")}
           />
-          <div
-            className="w-10 h-10 bg-white rounded-full"
+          <CircleUserRound
+            className="w-7 h-7 text-white rounded-full"
             onClick={() => router.push("/profile")}
           />
         </div>
@@ -38,7 +39,9 @@ export default function Home() {
       {/* Points Earned */}
       <div className="flex justify-between">
         <div className="flex flex-col gap-2">
-          <p className="text-white font-poppins text-xs">Total points earned</p>
+          <p className="text-tertiary font-poppins text-xs">
+            Total points earned
+          </p>
           <p className="text-white font-poppins text-7xl font-semibold">
             {userMeta.totalPoints.toLocaleString()}
           </p>
@@ -57,7 +60,7 @@ export default function Home() {
 
       {/* Exp Overvieew */}
       <div className="p-4 rounded-sm bg-gradient-to-t from-secondary to-main flex flex-col gap-4">
-        <p className="font-medium font-poppins text-lg mb-2 text-white">
+        <p className="font-medium font-poppins text-lg mb-2 text-tertiary">
           Exp Overview
         </p>
         <div className="flex gap-8">
@@ -78,13 +81,30 @@ export default function Home() {
             </p>
           </div>
         </div>
-        <div className="progress-bar rounded-lg h-6 bg-white" />
+        <div className="progress-bar rounded-lg h-8 flex border-[1px] border-tertiary">
+          <div
+            className="bg-gradient-to-r from-secondary from-[0%] via-secondary via-[85%] to-main to-[100%] rounded-l-lg flex justify-center items-center"
+            style={{ width: `${userMeta.characterPercent}%` }}
+          >
+            <p className="font-poppins text-white text-xs">
+              {userMeta.characterPercent}%
+            </p>
+          </div>
+          <div
+            className="bg-main rounded-r-lg flex justify-center items-center"
+            style={{ width: `${userMeta.participationPercent}%` }}
+          >
+            <p className="font-poppins text-white text-xs">
+              {userMeta.participationPercent}%
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Leaderboard */}
       <div className="p-4 rounded-sm bg-gradient-to-t from-secondary to-main flex flex-col gap-4">
         <div className="flex justify-between items-center">
-          <p className="font-medium font-poppins text-lg mb-2 text-white">
+          <p className="font-medium font-poppins text-lg mb-2 text-tertiary">
             Leaderboard
           </p>
           <Tabs value={category} onValueChange={setCategory}>
@@ -112,7 +132,7 @@ export default function Home() {
           {rankedUsers.slice(0, 5).map((user, index) => (
             <Link
               key={index}
-              href={`/profile/${user.username}`}
+              href={`/profile/${user.id}`}
               className="bg-white p-2 rounded-sm flex justify-between items-center"
             >
               <p className="font-poppins text-xs text-secondary">{user.name}</p>
@@ -131,45 +151,18 @@ export default function Home() {
       </div>
 
       {/* People you follow */}
-      <div className="p-4 rounded-sm bg-gradient-to-t from-secondary to-main flex flex-col gap-4">
-        <p className="font-medium font-poppins text-lg mb-2 text-white">
-          People you follow
-        </p>
-        <div className="flex gap-5 overflow-auto pb-4">
-          {userMeta.following.map((user, index) => (
-            <Link
-              href={`/profile/${user.username}`}
-              className="flex flex-col justify-center items-center gap-1"
-              key={index}
-            >
-              <div className="w-10 h-10 bg-white rounded-full" />
-              <p className="font-poppins text-white text-sm text-center">
-                {user.username}
-              </p>
-            </Link>
-          ))}
-        </div>
-      </div>
+      <ArrayDataWrapper
+        title="People you follow"
+        data={userMeta.following}
+        type="following"
+      />
 
       {/* Joined clubs */}
-      <div className="p-4 rounded-sm bg-gradient-to-t from-secondary to-main flex flex-col gap-4">
-        <p className="font-medium font-poppins text-lg mb-2 text-white">
-          Joined Clubs
-        </p>
-        <div className="flex gap-5 overflow-auto pb-4">
-          {userMeta.clubs.map((club, index) => (
-            <div
-              className="flex flex-col justify-center items-center gap-1"
-              key={index}
-            >
-              <div className="w-10 h-10 bg-white rounded-full" />
-              <p className="font-poppins text-white text-sm text-center">
-                {club.name}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
+      <ArrayDataWrapper
+        title="Joined Clubs"
+        data={userMeta.clubs}
+        type="clubs"
+      />
     </div>
   );
 }

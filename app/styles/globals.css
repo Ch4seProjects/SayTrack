@@ -4,10 +4,10 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-
   /* Your brand colors */
   --color-main: #255112;
   --color-secondary: #112509;
+  --color-tertiary: #ffdf20;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -50,6 +50,7 @@
   /* Brand colors */
   --color-main: var(--color-main);
   --color-secondary: var(--color-secondary);
+  --color-tertiary: var(--color-tertiary);
 
   /* Fonts */
   --font-sans: var(--font-geist-sans);
