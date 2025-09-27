@@ -18,6 +18,13 @@ export interface Club {
   name: string;
 }
 
+export interface UserClub {
+  club_id: string;
+  user_id: string;
+  role: string;
+  joined_at: string;
+}
+
 export interface Following {
   id: string;
 }
@@ -41,12 +48,9 @@ export interface User {
   email: string;
   year: number;
   section: Section;
-  points: Points;
-  achievements: Achievement[];
-  titles: Title[];
-  clubs: Club[];
-  following: Following[];
-  followers: Followers[];
+  participation_points: number;
+  character_points: number;
+  created_at: string;
 }
 
 export interface UserMeta extends User {

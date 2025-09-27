@@ -66,7 +66,9 @@ export default async function RootLayout({
             }}
           />
           {session?.user ? (
-            <NotificationProvider>{children}</NotificationProvider>
+            <NotificationProvider userId={session?.user.id}>
+              {children}
+            </NotificationProvider>
           ) : (
             children
           )}

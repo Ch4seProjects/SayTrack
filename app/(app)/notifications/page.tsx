@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { NOTIFICATION_CATEGORIES } from "@/app/lib/constants";
 import { useNotificationContext } from "@/app/context/NotificationContext";
@@ -10,6 +10,12 @@ import { SyncLoader } from "react-spinners";
 export default function Notifications() {
   const [category, setCategory] = useState("GENERAL");
   const { notifications, loading } = useNotificationContext();
+
+  // Split notifications into global and club-specific
+  const generalNotifs = notifications.filter((n) => n.club_id === null);
+  const clubNotifs = notifications.filter((n) => n.club_id !== null);
+
+  const filtered = category === "GENERAL" ? generalNotifs : clubNotifs;
 
   return (
     <div className="px-6 py-12 flex flex-col gap-8">
@@ -41,17 +47,16 @@ export default function Notifications() {
             aria-label="Loading Spinner"
             className="self-center"
           />
-        ) : notifications.length === 0 ? (
+        ) : filtered.length === 0 ? (
           <p className="text-sm text-gray-400 text-center py-6">
-            No notifications yet 🎉
+            No {category.toLowerCase()} notifications 🎉
           </p>
         ) : (
-          notifications.map((notif) => (
+          filtered.map((notif) => (
             <div
               className="flex justify-between gap-4 px-2 py-4"
               key={notif.id}
             >
-              {/* <div className="h-10 w-10 bg-main rounded-full" /> */}
               <div className="h-10 w-10 bg-main rounded-full flex justify-center items-center">
                 <Bell className="h-6 w-6 text-white" />
               </div>
