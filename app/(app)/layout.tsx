@@ -23,14 +23,12 @@ export default function AppLayout({
 
   const isActive = (route: string, key: string) => {
     if (key === "search") {
-      // highlight Search if we are in /search or /profile/[id]
       return (
         pathname.startsWith("/search") ||
         (pathname.startsWith("/profile/") && pathname !== "/profile")
       );
     }
     if (key === "profile") {
-      // highlight Profile only if exactly /profile
       return pathname === "/profile";
     }
     return pathname.startsWith(route);

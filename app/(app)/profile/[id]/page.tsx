@@ -8,6 +8,7 @@ import { ChevronLeft } from "lucide-react";
 import { LEADERBOARD_CATEGORIES, dummyUsers } from "@/app/lib/constants";
 import { useUserMeta } from "@/app/hooks/useUserMeta";
 import ArrayDataWrapper from "@/app/components/ArrayDataWrapper";
+import { User } from "lucide-react";
 
 interface ProfilePageProps {
   params: Promise<{ id: string }>;
@@ -42,7 +43,9 @@ export default function Profile({ params }: ProfilePageProps) {
 
       {/* Profile Information */}
       <div className="flex gap-6">
-        <div className="h-28 w-28 bg-main rounded-full" />
+        <div className="h-28 w-28 bg-main rounded-full flex justify-center items-center">
+          <User className="h-16 w-16 text-white" />
+        </div>
         <div className="font-poppins text-white text-xs flex-1 gap-1 flex flex-col">
           <p className="text-xl font-medium">{userMeta.name}</p>
           <p>{userMeta.email}</p>

@@ -1,11 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { NOTIFICATION_CATEGORIES } from "@/app/lib/constants";
+import { useNotificationContext } from "@/app/context/NotificationContext";
+import { Bell } from "lucide-react";
+import { SyncLoader } from "react-spinners";
 
 export default function Notifications() {
   const [category, setCategory] = useState("GENERAL");
+  const { notifications, loading } = useNotificationContext();
+
   return (
     <div className="px-6 py-12 flex flex-col gap-8">
       {/* Header */}
@@ -29,16 +34,39 @@ export default function Notifications() {
 
       {/* Notification Items */}
       <div className="flex flex-col divide-y divide-white">
-        {Array.from({ length: 5 }).map((_, index) => (
-          <div className="flex justify-between gap-4 px-2 py-4" key={index}>
-            <div className="h-10 w-10 bg-main rounded-full" />
-            <p className="text-[10px] font-poppins text-white flex-1">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut vero
-              cum sed.
-            </p>
-            <p className="text-[10px] font-poppins text-white">5m ago</p>
-          </div>
-        ))}
+        {loading ? (
+          <SyncLoader
+            color="#fff"
+            size={8}
+            aria-label="Loading Spinner"
+            className="self-center"
+          />
+        ) : notifications.length === 0 ? (
+          <p className="text-sm text-gray-400 text-center py-6">
+            No notifications yet 🎉
+          </p>
+        ) : (
+          notifications.map((notif) => (
+            <div
+              className="flex justify-between gap-4 px-2 py-4"
+              key={notif.id}
+            >
+              {/* <div className="h-10 w-10 bg-main rounded-full" /> */}
+              <div className="h-10 w-10 bg-main rounded-full flex justify-center items-center">
+                <Bell className="h-6 w-6 text-white" />
+              </div>
+              <p className="text-sm font-poppins text-white flex-1">
+                {notif.message}
+              </p>
+              <p className="text-[10px] font-poppins text-white">
+                {new Date(notif.created_at).toLocaleDateString("en-US", {
+                  month: "numeric",
+                  day: "numeric",
+                })}
+              </p>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

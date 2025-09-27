@@ -2,7 +2,7 @@
 
 import toast from "react-hot-toast";
 import { useState } from "react";
-import { createBrowserSupabase } from "@/app/utils/client";
+import { getSupabaseClient } from "@/app/utils/client";
 import { useRouter } from "next/navigation";
 import { Button } from "@/app/components/Button";
 import { SelectComponent } from "@/app/components/Select";
@@ -15,7 +15,7 @@ import { User } from "lucide-react";
 
 export default function Profile() {
   const router = useRouter();
-  const supabase = createBrowserSupabase();
+  const supabase = getSupabaseClient();
   const [category, setCategory] = useState("SECTION");
 
   const user = dummyUsers[0];

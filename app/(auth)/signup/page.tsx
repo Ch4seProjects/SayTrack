@@ -13,10 +13,10 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { signUpSchema, SignUpType } from "@/app/utils/schema";
 import { ACCOUNT_TYPES } from "@/app/lib/constants";
-import { createBrowserSupabase } from "@/app/utils/client";
+import { getSupabaseClient } from "@/app/utils/client";
 
 export default function Signup() {
-  const supabase = createBrowserSupabase();
+  const supabase = getSupabaseClient();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 

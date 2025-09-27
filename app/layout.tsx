@@ -3,6 +3,9 @@ import { Geist, Geist_Mono, Poppins } from "next/font/google";
 import "./styles/globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "react-hot-toast";
+import { createServerSupabase } from "./utils/server";
+import { SupabaseProvider } from "./context/SupabaseProvider";
+import { NotificationProvider } from "./context/NotificationProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,11 +28,17 @@ export const metadata: Metadata = {
   description: "Made by Ch4se",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = await createServerSupabase();
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
   return (
     <html lang="en">
       <body
@@ -40,23 +49,28 @@ export default function RootLayout({
           "antialiased"
         )}
       >
-        <Toaster
-          position="top-center"
-          reverseOrder={false}
-          gutter={8}
-          containerClassName=""
-          containerStyle={{}}
-          toastOptions={{
-            // Define default options
-            className: "",
-            duration: 3000,
-            style: {
-              fontFamily: "Poppins",
-              padding: "8px",
-            },
-          }}
-        />
-        {children}
+        <SupabaseProvider initialSession={session}>
+          <Toaster
+            position="top-center"
+            reverseOrder={false}
+            gutter={8}
+            containerClassName=""
+            containerStyle={{}}
+            toastOptions={{
+              className: "",
+              duration: 3000,
+              style: {
+                fontFamily: "Poppins",
+                padding: "8px",
+              },
+            }}
+          />
+          {session?.user ? (
+            <NotificationProvider>{children}</NotificationProvider>
+          ) : (
+            children
+          )}
+        </SupabaseProvider>
       </body>
     </html>
   );

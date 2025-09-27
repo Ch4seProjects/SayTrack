@@ -26,6 +26,14 @@ export interface Followers {
   id: string;
 }
 
+export interface Notification {
+  id: string;
+  title: string;
+  message: string;
+  created_at: string;
+  club_id: string | null;
+}
+
 export interface User {
   type: UserType;
   id: string;

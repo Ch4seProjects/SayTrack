@@ -54,8 +54,6 @@ export default function Leaderboards() {
             const marginTop =
               index === 1 ? "mt-0" : index === 0 ? "mt-8" : "mt-12";
 
-            console.log("index: ", index);
-
             return (
               <Link
                 key={user.id}

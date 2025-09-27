@@ -10,11 +10,11 @@ import { Input } from "@/app/components/Input";
 import { Button } from "@/app/components/Button";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema, LoginType } from "@/app/utils/schema";
-import { createBrowserSupabase } from "@/app/utils/client";
+import { getSupabaseClient } from "@/app/utils/client";
 
 export default function Login() {
   const router = useRouter();
-  const supabase = createBrowserSupabase();
+  const supabase = getSupabaseClient();
 
   const [loading, setLoading] = useState(false);
 
@@ -59,7 +59,7 @@ export default function Login() {
         {...register("password")}
         error={errors.password?.message}
       />
-      <Button type="submit" loading={loading} label="Submit" />
+      <Button type="submit" loading={loading} label="Login" />
       <p className="text-xs text-white font-poppins text-center">
         Don't have an account?{" "}
         <Link href="/signup" className="font-semibold text-main ">
