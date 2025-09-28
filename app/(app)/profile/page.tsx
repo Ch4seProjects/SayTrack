@@ -117,18 +117,10 @@ export default function Profile() {
       </div>
 
       {/* Titles */}
-      {/* <ArrayDataWrapper
-        title="My Titles"
-        data={userMeta.titles}
-        type="titles"
-      /> */}
+      <ArrayDataWrapper title="My Titles" data={[]} type="titles" />
 
       {/* My Achievements */}
-      {/* <ArrayDataWrapper
-        title="My Achievements"
-        data={userMeta.achievements}
-        type="achievements"
-      /> */}
+      <ArrayDataWrapper title="My Achievements" data={[]} type="achievements" />
 
       {/* Logout button */}
       <Button label="Logout" onClick={handleLogout} className="mt-auto" />

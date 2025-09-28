@@ -1,5 +1,5 @@
 import { Button as ShadcnButton } from "@/components/ui/button";
-import { SyncLoader } from "react-spinners";
+import { BeatLoader } from "react-spinners";
 import { cn } from "@/lib/utils";
 
 interface ButtonProps extends React.ComponentProps<"button"> {
@@ -28,7 +28,7 @@ export function Button({
       )}
     >
       {loading ? (
-        <SyncLoader color="#fff" size={8} aria-label="Loading Spinner" />
+        <BeatLoader color="#fff" size={8} aria-label="Loading Spinner" />
       ) : (
         label ?? children
       )}

@@ -10,13 +10,24 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useUserMeta } from "@/app/hooks/useUserMeta";
 import ArrayDataWrapper from "@/app/components/ArrayDataWrapper";
+import { useSupabase } from "@/app/context/SupabaseProvider";
+import { BeatLoader } from "react-spinners";
 
 export default function Home() {
   const [category, setCategory] = useState("SECTION");
   const router = useRouter();
   const rankedUsers = rankUsers(dummyUsers);
-  const user = dummyUsers[0];
+
+  const { user, loadingUser } = useSupabase();
+
   const userMeta = useUserMeta(user);
+
+  if (loadingUser || !userMeta)
+    return (
+      <div className="absolute inset-0 z-10 flex items-center justify-center">
+        <BeatLoader color="#fff" size={8} aria-label="Loading Spinner" />
+      </div>
+    );
 
   return (
     <div className="px-6 py-12 flex flex-col gap-8">
@@ -69,7 +80,7 @@ export default function Home() {
               Character
             </p>
             <p className="font-poppins text-xs text-white">
-              {userMeta.points.character.toLocaleString()}
+              {userMeta.character_points.toLocaleString()}
             </p>
           </div>
           <div className="flex flex-col">
@@ -77,7 +88,7 @@ export default function Home() {
               Participation
             </p>
             <p className="font-poppins text-xs text-white">
-              {userMeta.points.participation.toLocaleString()}
+              {userMeta.participation_points.toLocaleString()}
             </p>
           </div>
         </div>
@@ -151,18 +162,10 @@ export default function Home() {
       </div>
 
       {/* People you follow */}
-      <ArrayDataWrapper
-        title="People you follow"
-        data={userMeta.following}
-        type="following"
-      />
+      <ArrayDataWrapper title="People you follow" data={[]} type="following" />
 
       {/* Joined clubs */}
-      <ArrayDataWrapper
-        title="Joined Clubs"
-        data={userMeta.clubs}
-        type="clubs"
-      />
+      <ArrayDataWrapper title="Joined Clubs" data={[]} type="clubs" />
     </div>
   );
 }

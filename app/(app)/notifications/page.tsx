@@ -5,7 +5,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { NOTIFICATION_CATEGORIES } from "@/app/lib/constants";
 import { useNotificationContext } from "@/app/context/NotificationContext";
 import { Bell } from "lucide-react";
-import { SyncLoader } from "react-spinners";
+import { BeatLoader } from "react-spinners";
 
 export default function Notifications() {
   const [category, setCategory] = useState("GENERAL");
@@ -41,7 +41,7 @@ export default function Notifications() {
       {/* Notification Items */}
       <div className="flex flex-col divide-y divide-white">
         {loading ? (
-          <SyncLoader
+          <BeatLoader
             color="#fff"
             size={8}
             aria-label="Loading Spinner"
@@ -60,9 +60,14 @@ export default function Notifications() {
               <div className="h-10 w-10 bg-main rounded-full flex justify-center items-center">
                 <Bell className="h-6 w-6 text-white" />
               </div>
-              <p className="text-sm font-poppins text-white flex-1">
-                {notif.message}
-              </p>
+              <div className="flex flex-col flex-1">
+                <p className="text-sm font-poppins text-tertiary font-bold">
+                  {notif.title}
+                </p>
+                <p className="text-[10px] font-poppins text-white ">
+                  {notif.message}
+                </p>
+              </div>
               <p className="text-[10px] font-poppins text-white">
                 {new Date(notif.created_at).toLocaleDateString("en-US", {
                   month: "numeric",

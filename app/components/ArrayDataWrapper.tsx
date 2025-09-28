@@ -18,36 +18,41 @@ export default function ArrayDataWrapper<T extends { [key: string]: any }>({
       <p className="font-medium font-poppins text-lg mb-2 text-tertiary">
         {title}
       </p>
-      <div className="flex gap-5 overflow-auto pb-4">
-        {data.map((item, index) => {
-          if (type === "following" || type === "followers") {
+
+      {data && data.length === 0 ? (
+        <p className="text-gray-600 font-poppins text-sm">No available data</p>
+      ) : (
+        <div className="flex gap-5 overflow-auto pb-4">
+          {data.map((item, index) => {
+            if (type === "following" || type === "followers") {
+              return (
+                <Link
+                  href={`/profile/${item.id}`}
+                  className="flex flex-col justify-center items-center gap-1"
+                  key={index}
+                >
+                  <div className="w-10 h-10 bg-white rounded-full" />
+                  <p className="font-poppins text-white text-sm text-center">
+                    {item.id}
+                  </p>
+                </Link>
+              );
+            }
+
             return (
-              <Link
-                href={`/profile/${item.id}`}
+              <div
                 className="flex flex-col justify-center items-center gap-1"
                 key={index}
               >
                 <div className="w-10 h-10 bg-white rounded-full" />
                 <p className="font-poppins text-white text-sm text-center">
-                  {item.id}
+                  {item.title || item.name}
                 </p>
-              </Link>
+              </div>
             );
-          }
-
-          return (
-            <div
-              className="flex flex-col justify-center items-center gap-1"
-              key={index}
-            >
-              <div className="w-10 h-10 bg-white rounded-full" />
-              <p className="font-poppins text-white text-sm text-center">
-                {item.title || item.name}
-              </p>
-            </div>
-          );
-        })}
-      </div>
+          })}
+        </div>
+      )}
     </div>
   );
 }
