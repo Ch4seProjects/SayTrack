@@ -3,7 +3,7 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 import { getSupabaseClient } from "../utils/client";
-import type { Session } from "@supabase/supabase-js";
+import type { Session, AuthChangeEvent } from "@supabase/supabase-js";
 import { User } from "../types/User";
 
 type SupabaseContextType = {
@@ -26,12 +26,12 @@ export function SupabaseProvider({
   initialSession: Session | null;
 }) {
   const [supabase] = useState(() => getSupabaseClient());
-  const [session] = useState<Session | null>(initialSession);
+  const [session, setSession] = useState<Session | null>(initialSession);
   const [user, setUser] = useState<User | null>(null);
   const [loadingUser, setLoadingUser] = useState(false);
 
-  const fetchUser = async () => {
-    if (!session?.user) {
+  const fetchUser = async (s: Session | null = session) => {
+    if (!s?.user) {
       setUser(null);
       return;
     }
@@ -40,7 +40,7 @@ export function SupabaseProvider({
       const { data, error } = await supabase
         .from("profiles")
         .select("*")
-        .eq("id", session.user.id)
+        .eq("id", s.user.id)
         .single();
       if (error) throw error;
       setUser(data);
@@ -52,8 +52,28 @@ export function SupabaseProvider({
   };
 
   useEffect(() => {
-    fetchUser();
-  }, [session]);
+    // listen for login/logout/session refresh
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(
+      (event: AuthChangeEvent, newSession: Session | null) => {
+        setSession(newSession);
+        fetchUser(newSession);
+      }
+    );
+
+    // in case initialSession was null but supabase already has one cached
+    supabase.auth
+      .getSession()
+      .then(({ data }: { data: { session: Session | null } }) => {
+        setSession(data.session);
+        fetchUser(data.session);
+      });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [supabase]);
 
   return (
     <SupabaseContext.Provider

@@ -1,5 +1,6 @@
 export type Section = "Newton" | "Bernoulli" | "Galileo" | "Charles" | "Boyle";
 export type UserType = "student" | "admin";
+export type LeaderboardCategory = "SECTION" | "BATCH";
 
 export interface Points {
   character: number;
@@ -57,4 +58,15 @@ export interface UserMeta extends User {
   totalPoints: number;
   characterPercent: number;
   participationPercent: number;
+}
+
+export interface Profile {
+  id: string;
+  name: string;
+  year: number;
+  section: Section;
+  type: UserType;
+  character_points: number;
+  participation_points: number;
+  totalPoints: number;
 }

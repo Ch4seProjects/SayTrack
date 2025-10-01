@@ -3,23 +3,28 @@
 import { Bell, CircleUserRound } from "lucide-react";
 import { SelectComponent } from "@/app/components/Select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useState } from "react";
-import { LEADERBOARD_CATEGORIES, dummyUsers } from "@/app/lib/constants";
-import { rankUsers } from "@/app/utils/deriveUsers";
+import { LEADERBOARD_CATEGORIES } from "@/app/lib/constants";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useUserMeta } from "@/app/hooks/useUserMeta";
 import ArrayDataWrapper from "@/app/components/ArrayDataWrapper";
 import { useSupabase } from "@/app/context/SupabaseProvider";
 import { BeatLoader } from "react-spinners";
+import ProgressBar from "@/app/components/ProgressBar";
+import { useLeaderboards } from "@/app/context/LeaderboardProvider";
+import { LeaderboardCategory } from "@/app/types/User";
+import { getOrdinalSuffix } from "@/app/utils/deriveUsers";
 
 export default function Home() {
-  const [category, setCategory] = useState("SECTION");
+  const {
+    category,
+    setCategory,
+    filteredUsers,
+    currentUserRank,
+    loading: leaderboardsLoading,
+  } = useLeaderboards();
   const router = useRouter();
-  const rankedUsers = rankUsers(dummyUsers);
-
   const { user, loadingUser } = useSupabase();
-
   const userMeta = useUserMeta(user);
 
   if (loadingUser || !userMeta)
@@ -60,11 +65,13 @@ export default function Home() {
         <div className="flex flex-col items-center gap-2">
           <SelectComponent
             category={category}
-            setCategory={setCategory}
+            setCategory={(val) => setCategory(val as LeaderboardCategory)}
             entries={LEADERBOARD_CATEGORIES}
           />
           <p className="text-white font-poppins text-xl font-light">
-            <span className="text-3xl font-semibold">13</span>th
+            <span className="text-3xl font-semibold">
+              {getOrdinalSuffix(currentUserRank)}
+            </span>
           </p>
         </div>
       </div>
@@ -92,24 +99,7 @@ export default function Home() {
             </p>
           </div>
         </div>
-        <div className="progress-bar rounded-lg h-8 flex border-[1px] border-tertiary">
-          <div
-            className="bg-gradient-to-r from-secondary from-[0%] via-secondary via-[85%] to-main to-[100%] rounded-l-lg flex justify-center items-center"
-            style={{ width: `${userMeta.characterPercent}%` }}
-          >
-            <p className="font-poppins text-white text-xs">
-              {userMeta.characterPercent}%
-            </p>
-          </div>
-          <div
-            className="bg-main rounded-r-lg flex justify-center items-center"
-            style={{ width: `${userMeta.participationPercent}%` }}
-          >
-            <p className="font-poppins text-white text-xs">
-              {userMeta.participationPercent}%
-            </p>
-          </div>
-        </div>
+        <ProgressBar userMeta={userMeta} />
       </div>
 
       {/* Leaderboard */}
@@ -118,7 +108,10 @@ export default function Home() {
           <p className="font-medium font-poppins text-lg mb-2 text-tertiary">
             Leaderboard
           </p>
-          <Tabs value={category} onValueChange={setCategory}>
+          <Tabs
+            value={category}
+            onValueChange={(val) => setCategory(val as LeaderboardCategory)}
+          >
             <TabsList className="h-fit gap-6 bg-white">
               {LEADERBOARD_CATEGORIES.map((type) => (
                 <TabsTrigger
@@ -140,18 +133,26 @@ export default function Home() {
               Points
             </p>
           </div>
-          {rankedUsers.slice(0, 5).map((user, index) => (
-            <Link
-              key={index}
-              href={`/profile/${user.id}`}
-              className="bg-white p-2 rounded-sm flex justify-between items-center"
-            >
-              <p className="font-poppins text-xs text-secondary">{user.name}</p>
-              <p className="font-poppins text-xs text-secondary">
-                {user.totalPoints.toLocaleString()}
-              </p>
-            </Link>
-          ))}
+          {leaderboardsLoading ? (
+            <div className="absolute inset-0 z-10 flex items-center justify-center">
+              <BeatLoader color="#fff" size={8} aria-label="Loading Spinner" />
+            </div>
+          ) : (
+            filteredUsers.slice(0, 5).map((user) => (
+              <Link
+                key={user.id}
+                href={`/profile/${user.id}`}
+                className="bg-white p-2 rounded-sm flex justify-between items-center"
+              >
+                <p className="font-poppins text-xs text-secondary">
+                  {user.name}
+                </p>
+                <p className="font-poppins text-xs text-secondary">
+                  {user.totalPoints.toLocaleString()}
+                </p>
+              </Link>
+            ))
+          )}
         </div>
         <Link
           href={"/leaderboards"}

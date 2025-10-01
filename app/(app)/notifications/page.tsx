@@ -58,10 +58,24 @@ export default function Notifications() {
               key={notif.id}
             >
               <div className="h-10 w-10 bg-main rounded-full flex justify-center items-center">
-                <Bell className="h-6 w-6 text-white" />
+                <Bell
+                  className={`h-6 w-6 ${
+                    new Date(notif.created_at).toDateString() ===
+                    new Date().toDateString()
+                      ? "text-tertiary"
+                      : "text-white"
+                  }`}
+                />
               </div>
               <div className="flex flex-col flex-1">
-                <p className="text-sm font-poppins text-tertiary font-bold">
+                <p
+                  className={`text-sm font-poppins font-bold ${
+                    new Date(notif.created_at).toDateString() ===
+                    new Date().toDateString()
+                      ? "text-tertiary"
+                      : "text-white"
+                  }`}
+                >
                   {notif.title}
                 </p>
                 <p className="text-[10px] font-poppins text-white ">

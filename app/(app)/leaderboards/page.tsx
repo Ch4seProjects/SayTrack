@@ -1,18 +1,33 @@
 "use client";
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useState } from "react";
 import { LEADERBOARD_CATEGORIES } from "@/app/lib/constants";
-import { dummyUsers } from "@/app/lib/constants";
-import { rankUsers } from "@/app/utils/deriveUsers";
 import Link from "next/link";
 import { User } from "lucide-react";
+import { useLeaderboards } from "@/app/context/LeaderboardProvider";
+import { BeatLoader } from "react-spinners";
+import { LeaderboardCategory } from "@/app/types/User";
 
 export default function Leaderboards() {
-  const [category, setCategory] = useState("SECTION");
-  const rankedUsers = rankUsers(dummyUsers);
+  const { filteredUsers, setCategory, category, loading } = useLeaderboards();
 
-  const podium = [rankedUsers[1], rankedUsers[0], rankedUsers[2]];
+  const podium = [filteredUsers[1], filteredUsers[0], filteredUsers[2]];
+
+  if (loading) {
+    return (
+      <div className="absolute inset-0 z-10 flex items-center justify-center">
+        <BeatLoader color="#fff" size={8} aria-label="Loading Spinner" />
+      </div>
+    );
+  }
+
+  if (filteredUsers.length === 0) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <p className="text-white">No users found 👀</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-full">
@@ -26,7 +41,7 @@ export default function Leaderboards() {
         {/* Tabs */}
         <Tabs
           value={category}
-          onValueChange={setCategory}
+          onValueChange={(val) => setCategory(val as LeaderboardCategory)}
           className="flex justify-center items-center"
         >
           <TabsList className="h-fit gap-6 bg-main p-1">
@@ -46,10 +61,12 @@ export default function Leaderboards() {
         {/* Top 3 */}
         <div className="flex justify-between">
           {podium.map((user, index) => {
+            if (!user) return null;
+
             const medalColors = [
-              "bg-gray-400",
-              "bg-yellow-400",
-              "bg-amber-800",
+              "bg-gray-400", // 2nd
+              "bg-yellow-400", // 1st
+              "bg-amber-800", // 3rd
             ];
             const marginTop =
               index === 1 ? "mt-0" : index === 0 ? "mt-8" : "mt-12";
@@ -81,9 +98,9 @@ export default function Leaderboards() {
         </div>
       </div>
 
-      {/* Leaderboard */}
+      {/* Leaderboard List */}
       <div className="bg-gradient-to-t from-secondary to-main flex-1 rounded-tl-xl rounded-tr-xl p-6 flex flex-col gap-4 overflow-auto">
-        {rankedUsers.slice(3, 10).map((user, index) => (
+        {filteredUsers.slice(3, 10).map((user, index) => (
           <Link
             className="bg-white p-4 rounded-md flex gap-4 items-center"
             key={user.id}

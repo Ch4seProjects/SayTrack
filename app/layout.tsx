@@ -6,6 +6,7 @@ import { Toaster } from "react-hot-toast";
 import { createServerSupabase } from "./utils/server";
 import { SupabaseProvider } from "./context/SupabaseProvider";
 import { NotificationProvider } from "./context/NotificationProvider";
+import { LeaderboardsProvider } from "./context/LeaderboardProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -67,7 +68,7 @@ export default async function RootLayout({
           />
           {session?.user ? (
             <NotificationProvider userId={session?.user.id}>
-              {children}
+              <LeaderboardsProvider>{children}</LeaderboardsProvider>
             </NotificationProvider>
           ) : (
             children

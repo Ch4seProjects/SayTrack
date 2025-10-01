@@ -13,6 +13,8 @@ import { dummyUsers } from "@/app/lib/constants";
 import ArrayDataWrapper from "@/app/components/ArrayDataWrapper";
 import { User } from "lucide-react";
 import { useSupabase } from "@/app/context/SupabaseProvider";
+import ProgressBar from "@/app/components/ProgressBar";
+import { BeatLoader } from "react-spinners";
 
 export default function Profile() {
   const router = useRouter();
@@ -22,7 +24,12 @@ export default function Profile() {
 
   const userMeta = useUserMeta(user);
 
-  if (loadingUser || !userMeta) return <p>Loading...</p>;
+  if (loadingUser || !userMeta)
+    return (
+      <div className="absolute inset-0 z-10 flex items-center justify-center">
+        <BeatLoader color="#fff" size={8} aria-label="Loading Spinner" />
+      </div>
+    );
 
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
@@ -80,24 +87,7 @@ export default function Profile() {
         <p className="font-medium font-poppins text-lg text-white">
           {userMeta.totalPoints.toLocaleString()} pts.
         </p>
-        <div className="progress-bar rounded-lg h-8 flex border-[1px] border-tertiary">
-          <div
-            className="bg-gradient-to-r from-secondary from-[0%] via-secondary via-[85%] to-main to-[100%] rounded-l-lg flex justify-center items-center"
-            style={{ width: `${userMeta.characterPercent}%` }}
-          >
-            <p className="font-poppins text-white text-xs">
-              {userMeta.characterPercent}%
-            </p>
-          </div>
-          <div
-            className="bg-main rounded-r-lg flex justify-center items-center"
-            style={{ width: `${userMeta.participationPercent}%` }}
-          >
-            <p className="font-poppins text-white text-xs">
-              {userMeta.participationPercent}%
-            </p>
-          </div>
-        </div>
+        <ProgressBar userMeta={userMeta} />
         <div className="container flex flex-col divide-y divide-white">
           <div className="flex justify-between font-poppins text-xs text-white py-2">
             <p>Character</p>
