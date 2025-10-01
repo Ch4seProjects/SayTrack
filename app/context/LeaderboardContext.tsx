@@ -1,7 +1,7 @@
 "use client";
-import { Profile } from "../types/User";
+import { Profile } from "../types/global";
 import { createContext, useContext } from "react";
-import { LeaderboardCategory } from "../types/User";
+import { LeaderboardCategory } from "../types/global";
 
 export interface LeaderboardContextType {
   users: Profile[];

@@ -1,5 +1,5 @@
 import React from "react";
-import { UserMeta } from "../types/User";
+import { UserMeta } from "../types/global";
 
 interface ProgressBarProps {
   userMeta: UserMeta;

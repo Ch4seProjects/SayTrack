@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { UserMeta } from "../types/User";
+import { UserMeta } from "../types/global";
 
 interface ArrayDataWrapperProps<T> {
   title: string;

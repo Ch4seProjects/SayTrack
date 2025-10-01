@@ -1,5 +1,5 @@
 "use client";
-import { Notification } from "../types/User";
+import { Notification } from "../types/global";
 import { createContext, useContext } from "react";
 
 export interface NotificationContextType {

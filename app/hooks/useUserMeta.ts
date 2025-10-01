@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { User, UserMeta, Points } from "../types/User";
+import { User, UserMeta, Points } from "../types/global";
 import { formatTotalPoints } from "../utils/deriveUsers";
 
 export function useUserMeta(user: User | null): UserMeta | null {

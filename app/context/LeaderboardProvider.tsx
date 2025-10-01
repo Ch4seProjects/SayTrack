@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useContext, useMemo } from "react";
-import { LeaderboardCategory, Profile } from "../types/User";
+import { LeaderboardCategory, Profile } from "../types/global";
 import { fetchLeaderboardProfiles } from "../services/leaderboardService";
 import { LeaderboardContext } from "./LeaderboardContext";
 import { useSupabase } from "./SupabaseProvider";

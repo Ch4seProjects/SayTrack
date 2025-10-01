@@ -4,7 +4,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { getSupabaseClient } from "../utils/client";
 import type { Session, AuthChangeEvent } from "@supabase/supabase-js";
-import { User } from "../types/User";
+import { User } from "../types/global";
 
 type SupabaseContextType = {
   supabase: ReturnType<typeof getSupabaseClient>;

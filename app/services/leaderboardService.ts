@@ -1,6 +1,6 @@
 // src/services/leaderboardService.ts
 import { getSupabaseClient } from "@/app/utils/client";
-import { Profile } from "@/app/types/User";
+import { Profile } from "@/app/types/global";
 
 export async function fetchLeaderboardProfiles(): Promise<Profile[]> {
   const supabase = getSupabaseClient();

@@ -12,7 +12,7 @@ import { useSupabase } from "@/app/context/SupabaseProvider";
 import { BeatLoader } from "react-spinners";
 import ProgressBar from "@/app/components/ProgressBar";
 import { useLeaderboards } from "@/app/context/LeaderboardProvider";
-import { LeaderboardCategory } from "@/app/types/User";
+import { LeaderboardCategory } from "@/app/types/global";
 import { getOrdinalSuffix } from "@/app/utils/deriveUsers";
 
 export default function Home() {

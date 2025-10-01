@@ -19,27 +19,12 @@ export interface Club {
   name: string;
 }
 
-export interface UserClub {
-  club_id: string;
-  user_id: string;
-  role: string;
-  joined_at: string;
-}
-
 export interface Following {
   id: string;
 }
 
 export interface Followers {
   id: string;
-}
-
-export interface Notification {
-  id: string;
-  title: string;
-  message: string;
-  created_at: string;
-  club_id: string | null;
 }
 
 export interface User {
@@ -63,10 +48,33 @@ export interface UserMeta extends User {
 export interface Profile {
   id: string;
   name: string;
+  email: string;
   year: number;
   section: Section;
   type: UserType;
   character_points: number;
   participation_points: number;
   totalPoints: number;
+}
+
+export interface Notification {
+  id: string;
+  title: string;
+  message: string;
+  created_at: string;
+  club_id: string | null;
+}
+
+export interface UserClub {
+  club_id: string;
+  user_id: string;
+  role: string;
+  joined_at: string;
+}
+
+export interface SearchResult {
+  id: string;
+  name: string;
+  year: number;
+  section: Section;
 }

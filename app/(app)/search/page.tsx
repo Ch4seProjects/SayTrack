@@ -1,8 +1,44 @@
+"use client";
+
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { Search as SearchIcon } from "lucide-react";
-import { dummyUsers } from "@/app/lib/constants";
+import { Profile } from "@/app/types/global";
+import { searchService } from "@/app/services/searchService";
+import { BeatLoader } from "react-spinners";
+import debounce from "lodash/debounce";
 
 export default function Search() {
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState<Profile[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const debouncedSearch = useMemo(
+    () =>
+      debounce(async (q: string) => {
+        if (!q.trim()) {
+          setResults([]);
+          setLoading(false);
+          return;
+        }
+
+        setLoading(true);
+        const profiles = await searchService(q);
+        setResults(profiles);
+        setLoading(false);
+      }, 500),
+    []
+  );
+
+  useEffect(() => {
+    debouncedSearch(query);
+
+    // Cancel debounce on unmount
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, [query, debouncedSearch]);
+
   return (
     <div className="px-6 py-12 flex flex-col gap-4">
       {/* Header */}
@@ -14,13 +50,23 @@ export default function Search() {
         <input
           type="text"
           placeholder="Search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
           className="text-white font-poppins bg-transparent outline-none focus:ring-0 w-full placeholder:text-gray-400"
         />
       </div>
 
       {/* Search Results */}
       <div className="flex flex-col gap-4">
-        {dummyUsers.map((user) => (
+        {loading && (
+          <BeatLoader color="#fff" size={8} aria-label="Loading Spinner" />
+        )}
+
+        {!loading && results.length === 0 && query.trim() !== "" && (
+          <p className="text-gray-400 font-poppins">No users found</p>
+        )}
+
+        {results.map((user) => (
           <Link
             href={`/profile/${user.id}`}
             key={user.id}

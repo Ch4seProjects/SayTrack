@@ -6,7 +6,7 @@ import Link from "next/link";
 import { User } from "lucide-react";
 import { useLeaderboards } from "@/app/context/LeaderboardProvider";
 import { BeatLoader } from "react-spinners";
-import { LeaderboardCategory } from "@/app/types/User";
+import { LeaderboardCategory } from "@/app/types/global";
 
 export default function Leaderboards() {
   const { filteredUsers, setCategory, category, loading } = useLeaderboards();

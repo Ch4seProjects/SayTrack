@@ -1,4 +1,4 @@
-import { User, Points } from "../types/User";
+import { User, Points } from "../types/global";
 
 // Accepts either a User or a Points object
 export function formatTotalPoints(user: User | Points): number {

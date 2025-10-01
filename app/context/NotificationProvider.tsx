@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { getSupabaseClient } from "../utils/client";
 import { NotificationContext } from "./NotificationContext";
-import { UserClub } from "../types/User";
+import { UserClub } from "../types/global";
 
 export function NotificationProvider({
   children,

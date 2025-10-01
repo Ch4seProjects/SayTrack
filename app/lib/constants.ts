@@ -1,4 +1,4 @@
-import { User, Section } from "../types/User";
+import { User, Section } from "../types/global";
 
 export const SECTIONS = [
   "Newton",
