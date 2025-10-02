@@ -1,28 +1,34 @@
 "use client";
 
 import toast from "react-hot-toast";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getSupabaseClient } from "@/app/utils/client";
 import { useRouter } from "next/navigation";
 import { Button } from "@/app/components/Button";
-import { SelectComponent } from "@/app/components/Select";
 import { Button as ShadcnButton } from "@/components/ui/button";
-import { LEADERBOARD_CATEGORIES } from "@/app/lib/constants";
 import { useUserMeta } from "@/app/hooks/useUserMeta";
-import { dummyUsers } from "@/app/lib/constants";
-import ArrayDataWrapper from "@/app/components/ArrayDataWrapper";
-import { User } from "lucide-react";
 import { useSupabase } from "@/app/context/SupabaseProvider";
 import ProgressBar from "@/app/components/ProgressBar";
 import { BeatLoader } from "react-spinners";
+import { fetchUserAchievements } from "@/app/services/achievementService";
+import ArrayDataWrapper from "@/app/components/ArrayDataWrapper";
+import { User } from "lucide-react";
 
 export default function Profile() {
   const router = useRouter();
   const supabase = getSupabaseClient();
-  const [category, setCategory] = useState("SECTION");
+  const [achievements, setAchievements] = useState<any[]>([]);
   const { user, loadingUser } = useSupabase();
-
   const userMeta = useUserMeta(user);
+
+  useEffect(() => {
+    if (!user?.id) return;
+
+    fetchUserAchievements(user.id).then((data) => {
+      setAchievements(data);
+      console.log("achievements", data);
+    });
+  }, [user?.id]);
 
   if (loadingUser || !userMeta)
     return (
@@ -61,10 +67,6 @@ export default function Profile() {
           <p>{userMeta.email}</p>
           <p>Section: {userMeta.section}</p>
           <p>Batch: {userMeta.year}</p>
-          <div className="flex gap-2">
-            {/* <p>{userMeta.following.length} Following</p>|
-            <p>{userMeta.clubs.length} Joined Clubs</p> */}
-          </div>
         </div>
       </div>
 
@@ -73,17 +75,6 @@ export default function Profile() {
         <p className="font-medium font-poppins text-lg  text-tertiary">
           My Progress
         </p>
-        {/* <div className="flex flex-col items-center gap-2 absolute top-4 right-4">
-          <SelectComponent
-            category={category}
-            setCategory={setCategory}
-            entries={LEADERBOARD_CATEGORIES}
-            backgroundColor="bg-secondary"
-          />
-          <p className="text-white font-poppins text-sm font-light">
-            <span className="text-lg font-semibold">13</span>th
-          </p>
-        </div> */}
         <p className="font-medium font-poppins text-lg text-white">
           {userMeta.totalPoints.toLocaleString()} pts.
         </p>
@@ -110,7 +101,11 @@ export default function Profile() {
       <ArrayDataWrapper title="My Titles" data={[]} type="titles" />
 
       {/* My Achievements */}
-      <ArrayDataWrapper title="My Achievements" data={[]} type="achievements" />
+      <ArrayDataWrapper
+        title="My Achievements"
+        data={achievements}
+        type="achievements"
+      />
 
       {/* Logout button */}
       <Button label="Logout" onClick={handleLogout} className="mt-auto" />

@@ -72,6 +72,23 @@ export interface UserClub {
   joined_at: string;
 }
 
+export type RawUserAchievement = {
+  id: string;
+  achieved_at: string;
+  achievement: {
+    id: string;
+    name: string;
+    description: string | null;
+  };
+};
+
+export type UserAchievement = {
+  id: string;
+  name: string;
+  description: string | null;
+  achieved_at: string;
+};
+
 export interface SearchResult {
   id: string;
   name: string;

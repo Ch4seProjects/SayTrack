@@ -14,6 +14,7 @@ import ProgressBar from "@/app/components/ProgressBar";
 import { useLeaderboards } from "@/app/context/LeaderboardProvider";
 import { LeaderboardCategory } from "@/app/types/global";
 import { getOrdinalSuffix } from "@/app/utils/deriveUsers";
+import { useEffect } from "react";
 
 export default function Home() {
   const {
