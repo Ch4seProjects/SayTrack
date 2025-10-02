@@ -8,8 +8,14 @@ import { ChevronLeft, User } from "lucide-react";
 import { LEADERBOARD_CATEGORIES } from "@/app/lib/constants";
 import ArrayDataWrapper from "@/app/components/ArrayDataWrapper";
 import { fetchProfileById } from "@/app/services/profileService";
-import { Profile as ProfileType } from "@/app/types/global";
+import {
+  Profile as ProfileType,
+  UserAchievement,
+  UserTitle,
+} from "@/app/types/global";
 import { BeatLoader } from "react-spinners";
+import { fetchUserAchievements } from "@/app/services/achievementService";
+import { fetchUserTitles } from "@/app/services/titleService";
 
 interface ProfilePageProps {
   params: Promise<{ id: string }>;
@@ -18,19 +24,32 @@ interface ProfilePageProps {
 export default function Profile({ params }: ProfilePageProps) {
   const { id } = use(params);
   const router = useRouter();
-
   const [category, setCategory] = useState("SECTION");
   const [user, setUser] = useState<ProfileType | null>(null);
+  const [achievements, setAchievements] = useState<UserAchievement[]>([]);
+  const [titles, setTitles] = useState<UserTitle[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadUser = async () => {
-      setLoading(true);
-      const profile = await fetchProfileById(id);
-      setUser(profile);
-      setLoading(false);
+    setLoading(true);
+
+    const loadData = async () => {
+      try {
+        const [profileData, achievementsData, titlesData] = await Promise.all([
+          fetchProfileById(id),
+          fetchUserAchievements(id),
+          fetchUserTitles(id),
+        ]);
+        setUser(profileData);
+        setAchievements(achievementsData);
+        setTitles(titlesData);
+      } catch (err) {
+        console.error("Error fetching profile data:", err);
+      }
     };
-    loadUser();
+
+    loadData();
+    setLoading(false);
   }, [id]);
 
   if (loading) {
@@ -97,8 +116,18 @@ export default function Profile({ params }: ProfilePageProps) {
       </div>
 
       {/* Titles + Achievements placeholders */}
-      <ArrayDataWrapper title="Titles" data={[]} type="titles" />
-      <ArrayDataWrapper title="Achievements" data={[]} type="achievements" />
+      <ArrayDataWrapper
+        title="Titles"
+        data={titles}
+        type="titles"
+        isLoading={loading}
+      />
+      <ArrayDataWrapper
+        title="Achievements"
+        data={achievements}
+        type="achievements"
+        isLoading={loading}
+      />
     </div>
   );
 }

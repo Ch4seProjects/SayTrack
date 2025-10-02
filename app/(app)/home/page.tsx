@@ -17,6 +17,7 @@ import { getOrdinalSuffix } from "@/app/utils/deriveUsers";
 import { fetchUserClubs } from "@/app/services/clubService";
 import { fetchUserFollowing } from "@/app/services/followService";
 import { useEffect, useState } from "react";
+import { UserClub, UserSummary } from "@/app/types/global";
 
 export default function Home() {
   const {
@@ -30,8 +31,8 @@ export default function Home() {
   const { user, loadingUser } = useSupabase();
   const userMeta = useUserMeta(user);
   const [isLoading, setIsLoading] = useState(false);
-  const [joinedClubs, setJoinedClubs] = useState<any[]>([]);
-  const [following, setFollowing] = useState<any[]>([]);
+  const [joinedClubs, setJoinedClubs] = useState<UserClub[]>([]);
+  const [following, setFollowing] = useState<UserSummary[]>([]);
 
   useEffect(() => {
     if (!user?.id) return;

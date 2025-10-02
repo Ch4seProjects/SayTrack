@@ -14,12 +14,13 @@ import { fetchUserAchievements } from "@/app/services/achievementService";
 import { fetchUserTitles } from "@/app/services/titleService";
 import ArrayDataWrapper from "@/app/components/ArrayDataWrapper";
 import { User } from "lucide-react";
+import { UserAchievement, UserTitle } from "@/app/types/global";
 
 export default function Profile() {
   const router = useRouter();
   const supabase = getSupabaseClient();
-  const [achievements, setAchievements] = useState<any[]>([]);
-  const [titles, setTitles] = useState<any[]>([]);
+  const [achievements, setAchievements] = useState<UserAchievement[]>([]);
+  const [titles, setTitles] = useState<UserTitle[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { user, loadingUser } = useSupabase();
   const userMeta = useUserMeta(user);
