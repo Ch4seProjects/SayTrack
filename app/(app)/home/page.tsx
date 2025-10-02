@@ -14,7 +14,9 @@ import ProgressBar from "@/app/components/ProgressBar";
 import { useLeaderboards } from "@/app/context/LeaderboardProvider";
 import { LeaderboardCategory } from "@/app/types/global";
 import { getOrdinalSuffix } from "@/app/utils/deriveUsers";
-import { useEffect } from "react";
+import { fetchUserClubs } from "@/app/services/clubService";
+import { fetchUserFollowing } from "@/app/services/followService";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const {
@@ -27,6 +29,31 @@ export default function Home() {
   const router = useRouter();
   const { user, loadingUser } = useSupabase();
   const userMeta = useUserMeta(user);
+  const [isLoading, setIsLoading] = useState(false);
+  const [joinedClubs, setJoinedClubs] = useState<any[]>([]);
+  const [following, setFollowing] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (!user?.id) return;
+    setIsLoading(true);
+
+    const loadData = async () => {
+      try {
+        const [clubsData, followingData] = await Promise.all([
+          fetchUserClubs(user.id),
+          fetchUserFollowing(user.id),
+        ]);
+
+        setJoinedClubs(clubsData);
+        setFollowing(followingData);
+      } catch (err) {
+        console.error("Error fetching clubs data:", err);
+      }
+    };
+
+    loadData();
+    setIsLoading(false);
+  }, [user?.id]);
 
   if (loadingUser || !userMeta)
     return (
@@ -164,10 +191,20 @@ export default function Home() {
       </div>
 
       {/* People you follow */}
-      <ArrayDataWrapper title="People you follow" data={[]} type="following" />
+      <ArrayDataWrapper
+        title="People you follow"
+        data={following}
+        type="following"
+        isLoading={isLoading}
+      />
 
       {/* Joined clubs */}
-      <ArrayDataWrapper title="Joined Clubs" data={[]} type="clubs" />
+      <ArrayDataWrapper
+        title="Joined Clubs"
+        data={joinedClubs}
+        type="clubs"
+        isLoading={isLoading}
+      />
     </div>
   );
 }

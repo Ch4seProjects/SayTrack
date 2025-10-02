@@ -11,6 +11,7 @@ import { useSupabase } from "@/app/context/SupabaseProvider";
 import ProgressBar from "@/app/components/ProgressBar";
 import { BeatLoader } from "react-spinners";
 import { fetchUserAchievements } from "@/app/services/achievementService";
+import { fetchUserTitles } from "@/app/services/titleService";
 import ArrayDataWrapper from "@/app/components/ArrayDataWrapper";
 import { User } from "lucide-react";
 
@@ -18,16 +19,31 @@ export default function Profile() {
   const router = useRouter();
   const supabase = getSupabaseClient();
   const [achievements, setAchievements] = useState<any[]>([]);
+  const [titles, setTitles] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const { user, loadingUser } = useSupabase();
   const userMeta = useUserMeta(user);
 
   useEffect(() => {
     if (!user?.id) return;
+    setIsLoading(true);
 
-    fetchUserAchievements(user.id).then((data) => {
-      setAchievements(data);
-      console.log("achievements", data);
-    });
+    const loadData = async () => {
+      try {
+        const [achievementsData, titlesData] = await Promise.all([
+          fetchUserAchievements(user.id),
+          fetchUserTitles(user.id),
+        ]);
+
+        setAchievements(achievementsData);
+        setTitles(titlesData);
+      } catch (err) {
+        console.error("Error fetching profile data:", err);
+      }
+    };
+
+    loadData();
+    setIsLoading(false);
   }, [user?.id]);
 
   if (loadingUser || !userMeta)
@@ -98,13 +114,19 @@ export default function Profile() {
       </div>
 
       {/* Titles */}
-      <ArrayDataWrapper title="My Titles" data={[]} type="titles" />
+      <ArrayDataWrapper
+        title="My Titles"
+        data={titles}
+        type="titles"
+        isLoading={isLoading}
+      />
 
       {/* My Achievements */}
       <ArrayDataWrapper
         title="My Achievements"
         data={achievements}
         type="achievements"
+        isLoading={isLoading}
       />
 
       {/* Logout button */}

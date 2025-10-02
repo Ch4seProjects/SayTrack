@@ -65,12 +65,41 @@ export interface Notification {
   club_id: string | null;
 }
 
+export interface RawUserClub {
+  id: string;
+  role: string;
+  joined_at: string;
+  club: {
+    id: string;
+    name: string;
+    description: string;
+  };
+}
+
 export interface UserClub {
-  club_id: string;
-  user_id: string;
+  id: string;
+  name: string;
+  description: string;
   role: string;
   joined_at: string;
 }
+
+export type RawUserTitle = {
+  id: string;
+  assigned_at: string;
+  title: {
+    id: string;
+    name: string;
+    description: string | null;
+  };
+};
+
+export type UserTitle = {
+  id: string;
+  name: string;
+  description: string | null;
+  assigned_at: string;
+};
 
 export type RawUserAchievement = {
   id: string;
@@ -88,6 +117,27 @@ export type UserAchievement = {
   description: string | null;
   achieved_at: string;
 };
+
+export interface RawUserFollow {
+  followed_at: string;
+  follower?: {
+    id: string;
+    name: string;
+    section: string | null;
+  };
+  following?: {
+    id: string;
+    name: string;
+    section: string | null;
+  };
+}
+
+export interface UserSummary {
+  id: string;
+  name: string;
+  section: string | null;
+  followed_at: string;
+}
 
 export interface SearchResult {
   id: string;
