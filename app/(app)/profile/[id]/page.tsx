@@ -1,21 +1,16 @@
 "use client";
 
-import { useEffect, useState, use } from "react";
+import { useState, use } from "react";
 import { useRouter } from "next/navigation";
 import { SelectComponent } from "@/app/components/Select";
 import { Button as ShadcnButton } from "@/components/ui/button";
 import { ChevronLeft, User } from "lucide-react";
 import { LEADERBOARD_CATEGORIES } from "@/app/lib/constants";
 import ArrayDataWrapper from "@/app/components/ArrayDataWrapper";
-import { fetchProfileById } from "@/app/services/profileService";
-import {
-  Profile as ProfileType,
-  UserAchievement,
-  UserTitle,
-} from "@/app/types/global";
 import { BeatLoader } from "react-spinners";
-import { fetchUserAchievements } from "@/app/services/achievementService";
-import { fetchUserTitles } from "@/app/services/titleService";
+import { useUserAchievements } from "@/app/hooks/useUserAchievements";
+import { useUserTitles } from "@/app/hooks/useUserTitles";
+import { useUserProfile } from "@/app/hooks/useUserProfile";
 
 interface ProfilePageProps {
   params: Promise<{ id: string }>;
@@ -25,34 +20,15 @@ export default function Profile({ params }: ProfilePageProps) {
   const { id } = use(params);
   const router = useRouter();
   const [category, setCategory] = useState("SECTION");
-  const [user, setUser] = useState<ProfileType | null>(null);
-  const [achievements, setAchievements] = useState<UserAchievement[]>([]);
-  const [titles, setTitles] = useState<UserTitle[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    setLoading(true);
+  const { data: profile, isLoading: profileLoading } = useUserProfile(id);
+  const { data: achievements = [], isLoading: achievementsLoading } =
+    useUserAchievements(id);
+  const { data: titles = [], isLoading: titlesLoading } = useUserTitles(id);
 
-    const loadData = async () => {
-      try {
-        const [profileData, achievementsData, titlesData] = await Promise.all([
-          fetchProfileById(id),
-          fetchUserAchievements(id),
-          fetchUserTitles(id),
-        ]);
-        setUser(profileData);
-        setAchievements(achievementsData);
-        setTitles(titlesData);
-      } catch (err) {
-        console.error("Error fetching profile data:", err);
-      }
-    };
+  const isLoading = achievementsLoading || titlesLoading || profileLoading;
 
-    loadData();
-    setLoading(false);
-  }, [id]);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center h-full">
         <BeatLoader color="#fff" size={8} />
@@ -60,7 +36,7 @@ export default function Profile({ params }: ProfilePageProps) {
     );
   }
 
-  if (!user) {
+  if (!profile) {
     return (
       <div className="px-6 py-12">
         <p className="text-white">User not found</p>
@@ -82,10 +58,10 @@ export default function Profile({ params }: ProfilePageProps) {
           <User className="h-16 w-16 text-white" />
         </div>
         <div className="font-poppins text-white text-xs flex-1 gap-1 flex flex-col">
-          <p className="text-xl font-medium">{user.name}</p>
-          <p>{user.email}</p>
-          <p>Section: {user.section}</p>
-          <p>Batch: {user.year}</p>
+          <p className="text-xl font-medium">{profile.name}</p>
+          <p>{profile.email}</p>
+          <p>Section: {profile.section}</p>
+          <p>Batch: {profile.year}</p>
           {/* placeholders until you join with following/clubs */}
           <div className="flex gap-2">
             <p>0 Following</p>|<p>0 Joined Clubs</p>
@@ -110,7 +86,7 @@ export default function Profile({ params }: ProfilePageProps) {
           </p>
         </div>
         <p className="font-medium font-poppins text-lg text-white">
-          {user.totalPoints.toLocaleString()} pts.
+          {profile.totalPoints.toLocaleString()} pts.
         </p>
         {/* progress bars */}
       </div>
@@ -120,13 +96,13 @@ export default function Profile({ params }: ProfilePageProps) {
         title="Titles"
         data={titles}
         type="titles"
-        isLoading={loading}
+        isLoading={isLoading}
       />
       <ArrayDataWrapper
         title="Achievements"
         data={achievements}
         type="achievements"
-        isLoading={loading}
+        isLoading={isLoading}
       />
     </div>
   );

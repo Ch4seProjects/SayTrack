@@ -34,7 +34,7 @@ export default function ArrayDataWrapper<
                   key={item.id}
                 >
                   <div className="w-10 h-10 bg-white rounded-full" />
-                  <p className="font-poppins text-white text-sm text-center">
+                  <p className="font-poppins text-white text-[10px] text-center">
                     {item.name || item.id}
                   </p>
                 </Link>

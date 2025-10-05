@@ -1,7 +1,6 @@
 "use client";
 
 import toast from "react-hot-toast";
-import { useState, useEffect } from "react";
 import { getSupabaseClient } from "@/app/utils/client";
 import { useRouter } from "next/navigation";
 import { Button } from "@/app/components/Button";
@@ -10,44 +9,26 @@ import { useUserMeta } from "@/app/hooks/useUserMeta";
 import { useSupabase } from "@/app/context/SupabaseProvider";
 import ProgressBar from "@/app/components/ProgressBar";
 import { BeatLoader } from "react-spinners";
-import { fetchUserAchievements } from "@/app/services/achievementService";
-import { fetchUserTitles } from "@/app/services/titleService";
 import ArrayDataWrapper from "@/app/components/ArrayDataWrapper";
 import { User } from "lucide-react";
-import { UserAchievement, UserTitle } from "@/app/types/global";
+import { useUserAchievements } from "@/app/hooks/useUserAchievements";
+import { useUserTitles } from "@/app/hooks/useUserTitles";
 
 export default function Profile() {
   const router = useRouter();
   const supabase = getSupabaseClient();
-  const [achievements, setAchievements] = useState<UserAchievement[]>([]);
-  const [titles, setTitles] = useState<UserTitle[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const { user, loadingUser } = useSupabase();
   const userMeta = useUserMeta(user);
 
-  useEffect(() => {
-    if (!user?.id) return;
-    setIsLoading(true);
+  const { data: achievements = [], isLoading: achievementsLoading } =
+    useUserAchievements(user?.id);
+  const { data: titles = [], isLoading: titlesLoading } = useUserTitles(
+    user?.id
+  );
 
-    const loadData = async () => {
-      try {
-        const [achievementsData, titlesData] = await Promise.all([
-          fetchUserAchievements(user.id),
-          fetchUserTitles(user.id),
-        ]);
+  const isLoading = achievementsLoading || titlesLoading || loadingUser;
 
-        setAchievements(achievementsData);
-        setTitles(titlesData);
-      } catch (err) {
-        console.error("Error fetching profile data:", err);
-      }
-    };
-
-    loadData();
-    setIsLoading(false);
-  }, [user?.id]);
-
-  if (loadingUser || !userMeta)
+  if (isLoading || !userMeta)
     return (
       <div className="absolute inset-0 z-10 flex items-center justify-center">
         <BeatLoader color="#fff" size={8} aria-label="Loading Spinner" />

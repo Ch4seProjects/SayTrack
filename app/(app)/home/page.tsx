@@ -14,10 +14,8 @@ import ProgressBar from "@/app/components/ProgressBar";
 import { useLeaderboards } from "@/app/context/LeaderboardProvider";
 import { LeaderboardCategory } from "@/app/types/global";
 import { getOrdinalSuffix } from "@/app/utils/deriveUsers";
-import { fetchUserClubs } from "@/app/services/clubService";
-import { fetchUserFollowing } from "@/app/services/followService";
-import { useEffect, useState } from "react";
-import { UserClub, UserSummary } from "@/app/types/global";
+import { useUserClubs } from "@/app/hooks/useUserClubs";
+import { useUserFollowings } from "@/app/hooks/useUserFollowings";
 
 export default function Home() {
   const {
@@ -30,33 +28,23 @@ export default function Home() {
   const router = useRouter();
   const { user, loadingUser } = useSupabase();
   const userMeta = useUserMeta(user);
-  const [isLoading, setIsLoading] = useState(false);
-  const [joinedClubs, setJoinedClubs] = useState<UserClub[]>([]);
-  const [following, setFollowing] = useState<UserSummary[]>([]);
 
-  useEffect(() => {
-    if (!user?.id) return;
-    setIsLoading(true);
+  const {
+    data: joinedClubs = [],
+    isLoading: clubsLoading,
+    error: clubsError,
+  } = useUserClubs(user?.id);
 
-    const loadData = async () => {
-      try {
-        const [clubsData, followingData] = await Promise.all([
-          fetchUserClubs(user.id),
-          fetchUserFollowing(user.id),
-        ]);
+  const {
+    data: followings = [],
+    isLoading: followingsLoading,
+    error: followingsError,
+  } = useUserFollowings(user?.id);
 
-        setJoinedClubs(clubsData);
-        setFollowing(followingData);
-      } catch (err) {
-        console.error("Error fetching clubs data:", err);
-      }
-    };
+  const isLoading =
+    loadingUser || leaderboardsLoading || clubsLoading || followingsLoading;
 
-    loadData();
-    setIsLoading(false);
-  }, [user?.id]);
-
-  if (loadingUser || !userMeta)
+  if (isLoading || !userMeta)
     return (
       <div className="absolute inset-0 z-10 flex items-center justify-center">
         <BeatLoader color="#fff" size={8} aria-label="Loading Spinner" />
@@ -194,7 +182,7 @@ export default function Home() {
       {/* People you follow */}
       <ArrayDataWrapper
         title="People you follow"
-        data={following}
+        data={followings}
         type="following"
         isLoading={isLoading}
       />

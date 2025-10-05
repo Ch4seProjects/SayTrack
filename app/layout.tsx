@@ -7,6 +7,7 @@ import { createServerSupabase } from "./utils/server";
 import { SupabaseProvider } from "./context/SupabaseProvider";
 import { NotificationProvider } from "./context/NotificationProvider";
 import { LeaderboardsProvider } from "./context/LeaderboardProvider";
+import ReactQueryProvider from "./context/ReactQueryProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -50,30 +51,32 @@ export default async function RootLayout({
           "antialiased"
         )}
       >
-        <SupabaseProvider initialSession={session}>
-          <Toaster
-            position="top-center"
-            reverseOrder={false}
-            gutter={8}
-            containerClassName=""
-            containerStyle={{}}
-            toastOptions={{
-              className: "",
-              duration: 3000,
-              style: {
-                fontFamily: "Poppins",
-                padding: "8px",
-              },
-            }}
-          />
-          {session?.user ? (
-            <NotificationProvider userId={session?.user.id}>
-              <LeaderboardsProvider>{children}</LeaderboardsProvider>
-            </NotificationProvider>
-          ) : (
-            children
-          )}
-        </SupabaseProvider>
+        <ReactQueryProvider>
+          <SupabaseProvider initialSession={session}>
+            <Toaster
+              position="top-center"
+              reverseOrder={false}
+              gutter={8}
+              containerClassName=""
+              containerStyle={{}}
+              toastOptions={{
+                className: "",
+                duration: 3000,
+                style: {
+                  fontFamily: "Poppins",
+                  padding: "8px",
+                },
+              }}
+            />
+            {session?.user ? (
+              <NotificationProvider userId={session?.user.id}>
+                <LeaderboardsProvider>{children}</LeaderboardsProvider>
+              </NotificationProvider>
+            ) : (
+              children
+            )}
+          </SupabaseProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   );

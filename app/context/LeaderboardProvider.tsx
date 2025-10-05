@@ -1,7 +1,9 @@
 "use client";
-import { useState, useEffect, useContext, useMemo } from "react";
+
+import { useState, useMemo, useContext } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { LeaderboardCategory, Profile } from "../types/global";
-import { fetchLeaderboardProfiles } from "../services/leaderboardService";
+import { fetchLeaderboardProfiles } from "../services/fetchLeaderboardProfiles";
 import { LeaderboardContext } from "./LeaderboardContext";
 import { useSupabase } from "./SupabaseProvider";
 
@@ -11,21 +13,23 @@ export function LeaderboardsProvider({
   children: React.ReactNode;
 }) {
   const { user } = useSupabase();
-  const [category, setCategory] = useState<LeaderboardCategory>("SECTION");
-  const [users, setUsers] = useState<Profile[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  const load = async () => {
-    setLoading(true);
-    const profiles = await fetchLeaderboardProfiles();
-    setUsers(profiles);
-    setLoading(false);
-  };
+  const [category, setCategory] = useState<LeaderboardCategory>("SECTION");
+
+  const {
+    data: users = [],
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["leaderboardProfiles"],
+    queryFn: fetchLeaderboardProfiles,
+  });
 
   const filteredUsers = useMemo(() => {
     if (!user) return [];
 
-    let group: typeof users = [];
+    let group: Profile[] = [];
+
     if (category === "SECTION") {
       group = users.filter((u) => u.section === user.section);
     } else if (category === "BATCH") {
@@ -35,7 +39,7 @@ export function LeaderboardsProvider({
     }
 
     return group.sort((a, b) => b.totalPoints - a.totalPoints);
-  }, [category, users]);
+  }, [category, users, user]);
 
   const currentUserRank = useMemo(() => {
     if (!user || filteredUsers.length === 0) return null;
@@ -43,17 +47,13 @@ export function LeaderboardsProvider({
     return idx >= 0 ? idx + 1 : null; // 1-based rank
   }, [filteredUsers, user]);
 
-  useEffect(() => {
-    load();
-  }, []);
-
   return (
     <LeaderboardContext.Provider
       value={{
         users,
         filteredUsers,
-        loading,
-        refresh: load,
+        loading: isLoading,
+        refresh: () => refetch(),
         category,
         setCategory,
         currentUserRank,
@@ -64,9 +64,10 @@ export function LeaderboardsProvider({
   );
 }
 
+// --- Hook (unchanged) ---
 export function useLeaderboards() {
   const ctx = useContext(LeaderboardContext);
   if (!ctx)
-    throw new Error("useLeaderboards must be used within LeaderboardProvider");
+    throw new Error("useLeaderboards must be used within LeaderboardsProvider");
   return ctx;
 }

@@ -2,12 +2,13 @@
 import { Profile } from "../types/global";
 import { createContext, useContext } from "react";
 import { LeaderboardCategory } from "../types/global";
+import { QueryObserverResult } from "@tanstack/react-query";
 
 export interface LeaderboardContextType {
   users: Profile[];
   filteredUsers: Profile[];
   loading: boolean;
-  refresh: () => Promise<void>;
+  refresh: () => Promise<QueryObserverResult<Profile[], Error>>;
   category: LeaderboardCategory;
   setCategory: (category: LeaderboardCategory) => void;
   currentUserRank: number | null;
