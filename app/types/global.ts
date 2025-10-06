@@ -16,7 +16,9 @@ export interface Title {
 }
 
 export interface Club {
+  id: string;
   name: string;
+  description: string;
 }
 
 export interface Following {
@@ -63,25 +65,24 @@ export interface Notification {
   message: string;
   created_at: string;
   club_id: string | null;
+  clubs?: {
+    name: string;
+  } | null;
 }
 
 export interface RawUserClub {
   id: string;
   role: string;
   joined_at: string;
-  club: {
-    id: string;
-    name: string;
-    description: string;
-  };
+  club: Club;
 }
 
 export interface UserClub {
-  id: string;
-  name: string;
-  description: string;
-  role: string;
-  joined_at: string;
+  club_id: string;
+  name?: string;
+  description?: string;
+  role?: string;
+  joined_at?: string;
 }
 
 export type RawUserTitle = {

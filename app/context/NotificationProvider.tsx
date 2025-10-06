@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getSupabaseClient } from "../utils/client";
 import { NotificationContext } from "./NotificationContext";
 import { UserClub } from "../types/global";
+import { useIsAdmin } from "../hooks/useIsAdmin";
 
 export function NotificationProvider({
   children,
@@ -12,15 +13,30 @@ export function NotificationProvider({
   children: React.ReactNode;
   userId: string;
 }) {
-  const supabase = getSupabaseClient();
+  const isAdmin = useIsAdmin();
 
-  const fetchNotifications = async (): Promise<any[]> => {
+  const fetchUserNotifications = async (): Promise<any[]> => {
     if (!userId || userId.trim() === "") {
       console.warn("⚠️ fetchNotifications called without valid userId");
       return [];
     }
 
     const supabase = getSupabaseClient();
+
+    // If user is admin, fetch all notifications (no filtering)
+    if (isAdmin) {
+      const { data, error } = await supabase
+        .from("notifications")
+        .select("*, clubs(name)")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Error fetching all notifications (admin):", error);
+        return [];
+      }
+
+      return data ?? [];
+    }
 
     const { data: memberships, error: membershipError } = await supabase
       .from("user_clubs")
@@ -30,7 +46,7 @@ export function NotificationProvider({
     if (membershipError) throw membershipError;
 
     const clubIds =
-      memberships?.map((m: UserClub) => m.id).filter(Boolean) ?? [];
+      memberships?.map((m: UserClub) => m.club_id).filter(Boolean) ?? [];
 
     let query = supabase
       .from("notifications")
@@ -58,8 +74,8 @@ export function NotificationProvider({
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: ["notifications", userId],
-    queryFn: fetchNotifications,
+    queryKey: ["notifications", userId, isAdmin],
+    queryFn: fetchUserNotifications,
     enabled: !!userId && userId.trim() !== "",
     staleTime: 1000 * 30,
     refetchOnWindowFocus: true,

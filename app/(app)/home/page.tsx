@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, CircleUserRound } from "lucide-react";
+import { Bell, CircleUserRound, ChevronsUp, Medal, Star } from "lucide-react";
 import { SelectComponent } from "@/app/components/Select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LEADERBOARD_CATEGORIES } from "@/app/lib/constants";
@@ -16,6 +16,8 @@ import { LeaderboardCategory } from "@/app/types/global";
 import { getOrdinalSuffix } from "@/app/utils/deriveUsers";
 import { useUserClubs } from "@/app/hooks/useUserClubs";
 import { useUserFollowings } from "@/app/hooks/useUserFollowings";
+import DashboardCard from "@/app/components/DashboardCard";
+import { useIsAdmin } from "@/app/hooks/useIsAdmin";
 
 export default function Home() {
   const {
@@ -28,6 +30,7 @@ export default function Home() {
   const router = useRouter();
   const { user, loadingUser } = useSupabase();
   const userMeta = useUserMeta(user);
+  const isAdmin = useIsAdmin();
 
   const {
     data: joinedClubs = [],
@@ -51,149 +54,257 @@ export default function Home() {
       </div>
     );
 
-  return (
-    <div className="px-6 py-12 flex flex-col gap-8">
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <p className="text-white font-poppins text-xl">Home</p>
-        <div className="flex justify-between items-center gap-4">
-          <Bell
-            className="text-white"
-            fill="white"
-            onClick={() => router.push("/notifications")}
-          />
-          <CircleUserRound
-            className="w-7 h-7 text-white rounded-full"
-            onClick={() => router.push("/profile")}
-          />
-        </div>
-      </div>
-
-      {/* Points Earned */}
-      <div className="flex justify-between">
-        <div className="flex flex-col gap-2">
-          <p className="text-tertiary font-poppins text-xs">
-            Total points earned
-          </p>
-          <p className="text-white font-poppins text-7xl font-semibold">
-            {userMeta.totalPoints.toLocaleString()}
-          </p>
-        </div>
-        <div className="flex flex-col items-center gap-2">
-          <SelectComponent
-            category={category}
-            setCategory={(val) => setCategory(val as LeaderboardCategory)}
-            entries={LEADERBOARD_CATEGORIES}
-          />
-          <p className="text-white font-poppins text-xl font-light">
-            <span className="text-3xl font-semibold">
-              {getOrdinalSuffix(currentUserRank)}
-            </span>
-          </p>
-        </div>
-      </div>
-
-      {/* Exp Overvieew */}
-      <div className="p-4 rounded-sm bg-gradient-to-t from-secondary to-main flex flex-col gap-4">
-        <p className="font-medium font-poppins text-lg mb-2 text-tertiary">
-          Exp Overview
-        </p>
-        <div className="flex gap-8">
-          <div className="flex flex-col">
-            <p className="font-poppins text-xs font-medium text-white">
-              Character
-            </p>
-            <p className="font-poppins text-xs text-white">
-              {userMeta.character_points.toLocaleString()}
-            </p>
-          </div>
-          <div className="flex flex-col">
-            <p className="font-poppins text-xs font-medium text-white">
-              Participation
-            </p>
-            <p className="font-poppins text-xs text-white">
-              {userMeta.participation_points.toLocaleString()}
-            </p>
-          </div>
-        </div>
-        <ProgressBar userMeta={userMeta} />
-      </div>
-
-      {/* Leaderboard */}
-      <div className="p-4 rounded-sm bg-gradient-to-t from-secondary to-main flex flex-col gap-4">
+  const renderIsStudentLayout = () => {
+    return (
+      <div className="px-6 py-12 flex flex-col gap-8">
+        {/* Header */}
         <div className="flex justify-between items-center">
-          <p className="font-medium font-poppins text-lg mb-2 text-tertiary">
-            Leaderboard
-          </p>
-          <Tabs
-            value={category}
-            onValueChange={(val) => setCategory(val as LeaderboardCategory)}
-          >
-            <TabsList className="h-fit gap-6 bg-white">
-              {LEADERBOARD_CATEGORIES.map((type) => (
-                <TabsTrigger
-                  key={type}
-                  value={type}
-                  className="font-poppins text-xs text-gray-600
-                   data-[state=active]:bg-main data-[state=active]:text-white"
-                >
-                  {type}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </Tabs>
+          <p className="text-white font-poppins text-xl">Home</p>
+          <div className="flex justify-between items-center gap-4">
+            <Bell
+              className="text-white"
+              fill="white"
+              onClick={() => router.push("/notifications")}
+            />
+            <CircleUserRound
+              className="w-7 h-7 text-white rounded-full"
+              onClick={() => router.push("/profile")}
+            />
+          </div>
         </div>
-        <div className="flex flex-col gap-2">
-          <div className="flex justify-between">
-            <p className="font-poppins text-xs font-medium text-white">Name</p>
-            <p className="font-poppins text-xs font-medium text-white">
-              Points
+
+        {/* Points Earned */}
+        <div className="flex justify-between">
+          <div className="flex flex-col gap-2">
+            <p className="text-tertiary font-poppins text-xs">
+              Total points earned
+            </p>
+            <p className="text-white font-poppins text-7xl font-semibold">
+              {userMeta.totalPoints.toLocaleString()}
             </p>
           </div>
-          {leaderboardsLoading ? (
-            <div className="absolute inset-0 z-10 flex items-center justify-center">
-              <BeatLoader color="#fff" size={8} aria-label="Loading Spinner" />
-            </div>
-          ) : (
-            filteredUsers.slice(0, 5).map((user) => (
-              <Link
-                key={user.id}
-                href={`/profile/${user.id}`}
-                className="bg-white p-2 rounded-sm flex justify-between items-center"
-              >
-                <p className="font-poppins text-xs text-secondary">
-                  {user.name}
-                </p>
-                <p className="font-poppins text-xs text-secondary">
-                  {user.totalPoints.toLocaleString()}
-                </p>
-              </Link>
-            ))
-          )}
+          <div className="flex flex-col items-center gap-2">
+            <SelectComponent
+              category={category}
+              setCategory={(val) => setCategory(val as LeaderboardCategory)}
+              entries={LEADERBOARD_CATEGORIES}
+            />
+            <p className="text-white font-poppins text-xl font-light">
+              <span className="text-3xl font-semibold">
+                {getOrdinalSuffix(currentUserRank)}
+              </span>
+            </p>
+          </div>
         </div>
-        <Link
-          href={"/leaderboards"}
-          className="text-gray-600 text-xs font-poppins self-end"
-        >
-          view more
-        </Link>
+
+        {/* Exp Overvieew */}
+        <div className="p-4 rounded-sm bg-gradient-to-t from-secondary to-main flex flex-col gap-4">
+          <p className="font-medium font-poppins text-lg mb-2 text-tertiary">
+            Exp Overview
+          </p>
+          <div className="flex gap-8">
+            <div className="flex flex-col">
+              <p className="font-poppins text-xs font-medium text-white">
+                Character
+              </p>
+              <p className="font-poppins text-xs text-white">
+                {userMeta.character_points.toLocaleString()}
+              </p>
+            </div>
+            <div className="flex flex-col">
+              <p className="font-poppins text-xs font-medium text-white">
+                Participation
+              </p>
+              <p className="font-poppins text-xs text-white">
+                {userMeta.participation_points.toLocaleString()}
+              </p>
+            </div>
+          </div>
+          <ProgressBar userMeta={userMeta} />
+        </div>
+
+        {/* Leaderboard */}
+        <div className="p-4 rounded-sm bg-gradient-to-t from-secondary to-main flex flex-col gap-4">
+          <div className="flex justify-between items-center">
+            <p className="font-medium font-poppins text-lg mb-2 text-tertiary">
+              Leaderboard
+            </p>
+            <Tabs
+              value={category}
+              onValueChange={(val) => setCategory(val as LeaderboardCategory)}
+            >
+              <TabsList className="h-fit gap-6 bg-white">
+                {LEADERBOARD_CATEGORIES.map((type) => (
+                  <TabsTrigger
+                    key={type}
+                    value={type}
+                    className="font-poppins text-xs text-gray-600
+                   data-[state=active]:bg-main data-[state=active]:text-white"
+                  >
+                    {type}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </Tabs>
+          </div>
+          <div className="flex flex-col gap-2">
+            <div className="flex justify-between">
+              <p className="font-poppins text-xs font-medium text-white">
+                Name
+              </p>
+              <p className="font-poppins text-xs font-medium text-white">
+                Points
+              </p>
+            </div>
+            {leaderboardsLoading ? (
+              <div className="absolute inset-0 z-10 flex items-center justify-center">
+                <BeatLoader
+                  color="#fff"
+                  size={8}
+                  aria-label="Loading Spinner"
+                />
+              </div>
+            ) : (
+              filteredUsers.slice(0, 5).map((user) => (
+                <Link
+                  key={user.id}
+                  href={`/profile/${user.id}`}
+                  className="bg-white p-2 rounded-sm flex justify-between items-center"
+                >
+                  <p className="font-poppins text-xs text-secondary">
+                    {user.name}
+                  </p>
+                  <p className="font-poppins text-xs text-secondary">
+                    {user.totalPoints.toLocaleString()}
+                  </p>
+                </Link>
+              ))
+            )}
+          </div>
+          <Link
+            href={"/leaderboards"}
+            className="text-gray-600 text-xs font-poppins self-end"
+          >
+            view more
+          </Link>
+        </div>
+
+        {/* People you follow */}
+        <ArrayDataWrapper
+          title="People you follow"
+          data={followings}
+          type="following"
+          isLoading={isLoading}
+        />
+
+        {/* Joined clubs */}
+        <ArrayDataWrapper
+          title="Joined Clubs"
+          data={joinedClubs.map((club) => ({
+            id: club.club_id,
+            name: club.name,
+            title: club.name,
+          }))}
+          type="clubs"
+          isLoading={isLoading}
+        />
       </div>
+    );
+  };
 
-      {/* People you follow */}
-      <ArrayDataWrapper
-        title="People you follow"
-        data={followings}
-        type="following"
-        isLoading={isLoading}
-      />
+  const renderIsAdminLayout = () => {
+    return (
+      <div className="px-6 py-12 flex flex-col gap-12">
+        {/* Header */}
+        <div className="flex justify-between items-center">
+          <div className="flex flex-col">
+            <p className="text-white font-poppins text-xs">Welcome Admin</p>
+            <p className="text-white font-bold font-poppins text-2xl">
+              {user?.name}
+            </p>
+          </div>
+          <div className="flex justify-between items-center gap-4">
+            <Bell
+              className="text-white"
+              fill="white"
+              onClick={() => router.push("/notifications")}
+            />
+            <CircleUserRound
+              className="w-7 h-7 text-white rounded-full"
+              onClick={() => router.push("/profile")}
+            />
+          </div>
+        </div>
 
-      {/* Joined clubs */}
-      <ArrayDataWrapper
-        title="Joined Clubs"
-        data={joinedClubs}
-        type="clubs"
-        isLoading={isLoading}
-      />
-    </div>
-  );
+        {/* Dashboard */}
+        <div className="flex flex-col gap-2">
+          <p className="font-poppins text-lg text-white">Dashboard</p>
+          <DashboardCard />
+        </div>
+
+        {/* Admin Actions */}
+        {/* TODO: Implement this */}
+        <div className="flex flex-col gap-2">
+          <p className="font-poppins text-lg text-white">Actions</p>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="p-4 rounded-xl bg-main flex flex-col gap-4">
+              <div className="bg-secondary flex justify-center items-center w-12 h-12 rounded-xl">
+                <Bell className="text-tertiary" size={24} />
+              </div>
+              <div className="flex flex-col gap-1">
+                <p className=" font-poppins text-xs text-tertiary">
+                  Create Notification
+                </p>
+                <p className="font-poppins text-[8px] mb-2 text-white">
+                  Send notifications to keep everyone updated.
+                </p>
+              </div>
+            </div>
+            <div className="p-4 rounded-xl bg-main flex flex-col gap-4">
+              <div className="bg-secondary flex justify-center items-center w-12 h-12 rounded-xl">
+                <ChevronsUp className="text-tertiary" size={24} />
+              </div>
+              <div className="flex flex-col gap-1">
+                <p className=" font-poppins text-xs text-tertiary">
+                  Give Points
+                </p>
+                <p className="font-poppins text-[8px] mb-2 text-white">
+                  Assign points to students based on their performance.
+                </p>
+              </div>
+            </div>
+            <div className="p-4 rounded-xl bg-main flex flex-col gap-4">
+              <div className="bg-secondary flex justify-center items-center w-12 h-12 rounded-xl">
+                <Star className="text-tertiary" size={24} />
+              </div>
+              <div className="flex flex-col gap-1">
+                <p className=" font-poppins text-xs text-tertiary">
+                  Award Title
+                </p>
+                <p className="font-poppins text-[7px] mb-2 text-white">
+                  Grant titles to recognize outstanding achievements or
+                  milestones.
+                </p>
+              </div>
+            </div>
+            <div className="p-4 rounded-xl bg-main flex flex-col gap-4">
+              <div className="bg-secondary flex justify-center items-center w-12 h-12 rounded-xl">
+                <Medal className="text-tertiary" size={24} />
+              </div>
+              <div className="flex flex-col gap-1">
+                <p className=" font-poppins text-xs text-tertiary">
+                  Award Achievements
+                </p>
+                <p className="font-poppins text-[7px] mb-2 text-white">
+                  Give achievements to acknowledge individual accomplishments.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  return isAdmin ? renderIsAdminLayout() : renderIsStudentLayout();
 }

@@ -4,6 +4,7 @@ import "../styles/globals.css";
 import { House, Trophy, Search, User, Bell } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useIsAdmin } from "../hooks/useIsAdmin";
 
 const navItems = [
   { icon: House, route: "/home", key: "home" },
@@ -20,6 +21,12 @@ export default function AppLayout({
 }>) {
   const router = useRouter();
   const pathname = usePathname();
+  const isAdmin = useIsAdmin();
+
+  // Filter out the leaderboards nav for admin users
+  const filteredNavItems = isAdmin
+    ? navItems.filter((item) => item.key !== "leaderboards")
+    : navItems;
 
   const isActive = (route: string, key: string) => {
     if (key === "search") {
@@ -39,7 +46,7 @@ export default function AppLayout({
       <div className="content flex-1 overflow-auto">{children}</div>
 
       <div className="bottom-navigation flex justify-around p-4 bg-gradient-to-t from-secondary to-main">
-        {navItems.map(({ icon: Icon, route, key }) => (
+        {filteredNavItems.map(({ icon: Icon, route, key }) => (
           <button
             key={route}
             onClick={() => router.push(route)}

@@ -25,7 +25,7 @@ export default function ArrayDataWrapper<
         <p className="text-gray-600 font-poppins text-sm">No available data</p>
       ) : (
         <div className="flex gap-5 overflow-auto pb-4">
-          {data.map((item) => {
+          {data.map((item, index) => {
             if (type === "following" || type === "followers") {
               return (
                 <Link
@@ -44,7 +44,7 @@ export default function ArrayDataWrapper<
             return (
               <div
                 className="flex flex-col items-center gap-1 w-20"
-                key={item.id}
+                key={item.id ?? `${item.title}-${index}`}
               >
                 <div className="w-10 h-10 bg-white rounded-full" />
                 <p className="font-poppins text-white text-[10px] text-center">

@@ -2,20 +2,27 @@
 
 import { useState } from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { NOTIFICATION_CATEGORIES } from "@/app/lib/constants";
 import { useNotificationContext } from "@/app/context/NotificationContext";
+import { NOTIFICATION_CATEGORIES } from "@/app/lib/constants";
 import { Bell } from "lucide-react";
 import { BeatLoader } from "react-spinners";
+
+import { useIsAdmin } from "@/app/hooks/useIsAdmin";
 
 export default function Notifications() {
   const [category, setCategory] = useState("GENERAL");
   const { notifications, loading } = useNotificationContext();
+  const isAdmin = useIsAdmin();
 
   // Split notifications into global and club-specific
   const generalNotifs = notifications.filter((n) => n.club_id === null);
   const clubNotifs = notifications.filter((n) => n.club_id !== null);
 
-  const filtered = category === "GENERAL" ? generalNotifs : clubNotifs;
+  const filtered = isAdmin
+    ? notifications
+    : category === "GENERAL"
+    ? generalNotifs
+    : clubNotifs;
 
   return (
     <div className="px-6 py-12 flex flex-col gap-8">
@@ -23,20 +30,22 @@ export default function Notifications() {
       <p className="text-white font-poppins text-xl">Notifications</p>
 
       {/* Tabs */}
-      <Tabs value={category} onValueChange={setCategory}>
-        <TabsList className="h-fit w-full gap-6 bg-white">
-          {NOTIFICATION_CATEGORIES.map((type) => (
-            <TabsTrigger
-              key={type}
-              value={type}
-              className="font-poppins text-md text-gray-600 p-2
+      {!isAdmin && (
+        <Tabs value={category} onValueChange={setCategory}>
+          <TabsList className="h-fit w-full gap-6 bg-white">
+            {NOTIFICATION_CATEGORIES.map((type) => (
+              <TabsTrigger
+                key={type}
+                value={type}
+                className="font-poppins text-md text-gray-600 p-2
                    data-[state=active]:bg-main data-[state=active]:text-white"
-            >
-              {type}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-      </Tabs>
+              >
+                {type}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
+      )}
 
       {/* Notification Items */}
       <div className="flex flex-col divide-y divide-white">
@@ -58,35 +67,36 @@ export default function Notifications() {
               key={notif.id}
             >
               <div className="h-10 w-10 bg-main rounded-full flex justify-center items-center">
-                <Bell
-                  className={`h-6 w-6 ${
-                    new Date(notif.created_at).toDateString() ===
-                    new Date().toDateString()
-                      ? "text-tertiary"
-                      : "text-white"
-                  }`}
-                />
+                <Bell className="h-6 w-6 text-white" />
               </div>
               <div className="flex flex-col flex-1">
-                <p
-                  className={`text-sm font-poppins font-bold ${
-                    new Date(notif.created_at).toDateString() ===
-                    new Date().toDateString()
-                      ? "text-tertiary"
-                      : "text-white"
-                  }`}
-                >
+                {notif.club_id && (
+                  <span className="text-[9px] bg-main text-tertiary px-2 py-[2px] rounded-full self-start">
+                    {notif.clubs?.name || "Unknown Club"}
+                  </span>
+                )}
+                <p className="text-sm font-poppins font-bold text-white">
                   {notif.title}
                 </p>
                 <p className="text-[10px] font-poppins text-white ">
                   {notif.message}
                 </p>
               </div>
-              <p className="text-[10px] font-poppins text-white">
-                {new Date(notif.created_at).toLocaleDateString("en-US", {
-                  month: "numeric",
-                  day: "numeric",
-                })}
+              <p
+                className={`text-[10px] font-poppins ${
+                  new Date(notif.created_at).toDateString() ===
+                  new Date().toDateString()
+                    ? "text-tertiary"
+                    : "text-white"
+                }`}
+              >
+                {new Date(notif.created_at).toDateString() ===
+                new Date().toDateString()
+                  ? "Today"
+                  : new Date(notif.created_at).toLocaleDateString("en-US", {
+                      month: "numeric",
+                      day: "numeric",
+                    })}
               </p>
             </div>
           ))
