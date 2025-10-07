@@ -16,8 +16,10 @@ import { LeaderboardCategory } from "@/app/types/global";
 import { getOrdinalSuffix } from "@/app/utils/deriveUsers";
 import { useUserClubs } from "@/app/hooks/useUserClubs";
 import { useUserFollowings } from "@/app/hooks/useUserFollowings";
-import DashboardCard from "@/app/components/DashboardCard";
+// import DashboardCard from "@/app/components/DashboardCard";
 import { useIsAdmin } from "@/app/hooks/useIsAdmin";
+import ActionTile from "@/app/components/ActionTile";
+import { useModalContext } from "@/app/context/ModalContext";
 
 export default function Home() {
   const {
@@ -31,6 +33,7 @@ export default function Home() {
   const { user, loadingUser } = useSupabase();
   const userMeta = useUserMeta(user);
   const isAdmin = useIsAdmin();
+  const { showModal } = useModalContext();
 
   const {
     data: joinedClubs = [],
@@ -237,70 +240,40 @@ export default function Home() {
         </div>
 
         {/* Dashboard */}
-        <div className="flex flex-col gap-2">
+        {/* <div className="flex flex-col gap-2">
           <p className="font-poppins text-lg text-white">Dashboard</p>
           <DashboardCard />
-        </div>
+        </div> */}
 
         {/* Admin Actions */}
-        {/* TODO: Implement this */}
-        <div className="flex flex-col gap-2">
-          <p className="font-poppins text-lg text-white">Actions</p>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 rounded-xl bg-main flex flex-col gap-4">
-              <div className="bg-secondary flex justify-center items-center w-12 h-12 rounded-xl">
-                <Bell className="text-tertiary" size={24} />
-              </div>
-              <div className="flex flex-col gap-1">
-                <p className=" font-poppins text-xs text-tertiary">
-                  Create Notification
-                </p>
-                <p className="font-poppins text-[8px] mb-2 text-white">
-                  Send notifications to keep everyone updated.
-                </p>
-              </div>
-            </div>
-            <div className="p-4 rounded-xl bg-main flex flex-col gap-4">
-              <div className="bg-secondary flex justify-center items-center w-12 h-12 rounded-xl">
-                <ChevronsUp className="text-tertiary" size={24} />
-              </div>
-              <div className="flex flex-col gap-1">
-                <p className=" font-poppins text-xs text-tertiary">
-                  Give Points
-                </p>
-                <p className="font-poppins text-[8px] mb-2 text-white">
-                  Assign points to students based on their performance.
-                </p>
-              </div>
-            </div>
-            <div className="p-4 rounded-xl bg-main flex flex-col gap-4">
-              <div className="bg-secondary flex justify-center items-center w-12 h-12 rounded-xl">
-                <Star className="text-tertiary" size={24} />
-              </div>
-              <div className="flex flex-col gap-1">
-                <p className=" font-poppins text-xs text-tertiary">
-                  Award Title
-                </p>
-                <p className="font-poppins text-[7px] mb-2 text-white">
-                  Grant titles to recognize outstanding achievements or
-                  milestones.
-                </p>
-              </div>
-            </div>
-            <div className="p-4 rounded-xl bg-main flex flex-col gap-4">
-              <div className="bg-secondary flex justify-center items-center w-12 h-12 rounded-xl">
-                <Medal className="text-tertiary" size={24} />
-              </div>
-              <div className="flex flex-col gap-1">
-                <p className=" font-poppins text-xs text-tertiary">
-                  Award Achievements
-                </p>
-                <p className="font-poppins text-[7px] mb-2 text-white">
-                  Give achievements to acknowledge individual accomplishments.
-                </p>
-              </div>
-            </div>
-          </div>
+        <div className="grid grid-cols-2 gap-4">
+          <ActionTile
+            title="Create Notification"
+            description="Send notifications to keep everyone updated."
+            icon={<Bell className="text-tertiary" size={24} />}
+            isComingSoon
+          />
+
+          <ActionTile
+            title="Give Points"
+            description="Assign points to students based on their performance."
+            icon={<ChevronsUp className="text-tertiary" size={24} />}
+            onClick={() => showModal("GIVE_POINTS", { extra: "data here" })}
+          />
+
+          <ActionTile
+            title="Award Title"
+            description="Grant titles to recognize outstanding achievements or milestones."
+            icon={<Star className="text-tertiary" size={24} />}
+            isComingSoon
+          />
+
+          <ActionTile
+            title="Award Achievements"
+            description="Give achievements to acknowledge individual accomplishments."
+            icon={<Medal className="text-tertiary" size={24} />}
+            isComingSoon
+          />
         </div>
       </div>
     );

@@ -8,6 +8,7 @@ import { SupabaseProvider } from "./context/SupabaseProvider";
 import { NotificationProvider } from "./context/NotificationProvider";
 import { LeaderboardsProvider } from "./context/LeaderboardProvider";
 import ReactQueryProvider from "./context/ReactQueryProvider";
+import { ModalProvider } from "./context/ModalProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -70,7 +71,9 @@ export default async function RootLayout({
             />
             {session?.user ? (
               <NotificationProvider userId={session?.user.id}>
-                <LeaderboardsProvider>{children}</LeaderboardsProvider>
+                <ModalProvider>
+                  <LeaderboardsProvider>{children}</LeaderboardsProvider>
+                </ModalProvider>
               </NotificationProvider>
             ) : (
               children

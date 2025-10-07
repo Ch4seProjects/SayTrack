@@ -137,7 +137,7 @@ export default function Profile() {
           <div className=" font-poppins text-white text-xs flex-1 gap-1 flex flex-col">
             <p className="text-xl font-medium">{userMeta.name}</p>
             <p>
-              Role: <span className="uppercase">{userMeta.type}</span>
+              Role: <span className="capitalize">{userMeta.type}</span>
             </p>
           </div>
         </div>
