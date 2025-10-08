@@ -73,6 +73,10 @@ export const givePointsSchema = yup.object().shape({
     .typeError("Points must be a number")
     .positive("Points must be positive")
     .required("Points are required"),
+  type: yup
+    .string()
+    .oneOf(["participation", "character"], "Select a point type")
+    .required("Type is required"),
   // reason: yup
   //   .string()
   //   .min(3, "Reason must be at least 3 characters")

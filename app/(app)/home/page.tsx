@@ -1,6 +1,13 @@
 "use client";
 
-import { Bell, CircleUserRound, ChevronsUp, Medal, Star } from "lucide-react";
+import {
+  Bell,
+  CircleUserRound,
+  ChevronsUp,
+  Medal,
+  Star,
+  ChevronDown,
+} from "lucide-react";
 import { SelectComponent } from "@/app/components/Select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LEADERBOARD_CATEGORIES } from "@/app/lib/constants";
@@ -20,6 +27,9 @@ import { useUserFollowings } from "@/app/hooks/useUserFollowings";
 import { useIsAdmin } from "@/app/hooks/useIsAdmin";
 import ActionTile from "@/app/components/ActionTile";
 import { useModalContext } from "@/app/context/ModalContext";
+import { useUserPoints } from "@/app/hooks/useUserPoints";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Home() {
   const {
@@ -34,6 +44,11 @@ export default function Home() {
   const userMeta = useUserMeta(user);
   const isAdmin = useIsAdmin();
   const { showModal } = useModalContext();
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const { data: userPoints = [], isLoading: pointsLoading } = useUserPoints(
+    user?.id
+  );
 
   const {
     data: joinedClubs = [],
@@ -102,9 +117,22 @@ export default function Home() {
 
         {/* Exp Overvieew */}
         <div className="p-4 rounded-sm bg-gradient-to-t from-secondary to-main flex flex-col gap-4">
-          <p className="font-medium font-poppins text-lg mb-2 text-tertiary">
-            Exp Overview
-          </p>
+          <div className="flex justify-between items-center">
+            <p className="font-medium font-poppins text-lg mb-2 text-tertiary">
+              Exp Overview
+            </p>
+            <div
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="flex items-center justify-center w-8 h-8 rounded-md cursor-pointer
+             hover:bg-gray-800 transition-colors duration-200"
+            >
+              <ChevronDown
+                className={`text-tertiary transition-transform duration-300 ${
+                  isExpanded ? "rotate-180" : "rotate-0"
+                }`}
+              />
+            </div>
+          </div>
           <div className="flex gap-8">
             <div className="flex flex-col">
               <p className="font-poppins text-xs font-medium text-white">
@@ -124,6 +152,68 @@ export default function Home() {
             </div>
           </div>
           <ProgressBar userMeta={userMeta} />
+          <AnimatePresence>
+            {isExpanded && (
+              <motion.div
+                key="points-section"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="overflow-hidden flex flex-col gap-2 relative"
+              >
+                <div className="flex justify-between">
+                  <p className="font-poppins text-xs font-medium text-white">
+                    Reason
+                  </p>
+                  <p className="font-poppins text-xs font-medium text-white">
+                    Points
+                  </p>
+                </div>
+
+                {pointsLoading ? (
+                  <div className="absolute inset-0 z-10 flex items-center justify-center">
+                    <BeatLoader
+                      color="#fff"
+                      size={8}
+                      aria-label="Loading Spinner"
+                    />
+                  </div>
+                ) : userPoints && userPoints.length > 0 ? (
+                  userPoints.slice(0, 5).map((point, index) => (
+                    <motion.div
+                      key={point.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.05, duration: 0.25 }}
+                      className="bg-white p-2 rounded-sm flex justify-between items-center"
+                    >
+                      <div className="flex flex-col w-[60%]">
+                        <p className="font-poppins text-xs text-secondary font-semibold">
+                          {point.reason || "No reason provided"}
+                        </p>
+                        <p className="font-poppins text-[8px] text-gray-500 capitalize">
+                          {point.type} points
+                        </p>
+                      </div>
+                      <p
+                        className={`font-poppins text-xs font-medium ${
+                          point.points > 0 ? "text-green-600" : "text-red-600"
+                        }`}
+                      >
+                        {point.points > 0 ? "+" : ""}
+                        {point.points}
+                      </p>
+                    </motion.div>
+                  ))
+                ) : (
+                  <p className="text-gray-400 font-poppins text-xs text-center mt-2">
+                    No recent points yet.
+                  </p>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Leaderboard */}

@@ -3,19 +3,22 @@
 import { useState, useMemo } from "react";
 import { X, Search as SearchIcon } from "lucide-react";
 import { debounce } from "lodash";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { BeatLoader } from "react-spinners";
 import toast from "react-hot-toast";
-
 import { useSearchProfiles } from "@/app/hooks/useSearchProfiles";
 import { givePointsSchema, GivePointsType } from "@/app/utils/schema";
 import { Button } from "@/app/components/Button";
+import { useSupabase } from "@/app/context/SupabaseProvider";
+import { givePoints } from "@/app/services/givePointsService";
 
 export default function GivePointsModal({ onClose }: { onClose: () => void }) {
   const [inputValue, setInputValue] = useState("");
   const [query, setQuery] = useState("");
   const [showResults, setShowResults] = useState(false);
+  const { user } = useSupabase();
 
   const debouncedSetQuery = useMemo(
     () => debounce((value: string) => setQuery(value), 400),
@@ -28,13 +31,14 @@ export default function GivePointsModal({ onClose }: { onClose: () => void }) {
     register,
     handleSubmit,
     setValue,
-    watch,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<GivePointsType>({
+    defaultValues: {
+      type: "participation",
+    },
     resolver: yupResolver(givePointsSchema),
   });
-
-  const selectedStudent = watch("student");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -50,9 +54,43 @@ export default function GivePointsModal({ onClose }: { onClose: () => void }) {
   };
 
   const onSubmit = async (data: GivePointsType) => {
-    // TODO: Replace with Supabase update
-    toast.success(`Gave ${data.points} points to ${data.student.name}`);
-    onClose();
+    if (!user) {
+      toast.error("You must be logged in as an admin to perform this action.");
+      return;
+    }
+
+    const loadingToast = toast.loading("Processing your request...");
+
+    try {
+      const { success, message } = await givePoints(data, user.id);
+
+      if (success) {
+        toast.success(
+          `${data.points} point${data.points > 1 ? "s" : ""} awarded to ${
+            data.student.name
+          }.`,
+          {
+            id: loadingToast,
+            duration: 4000,
+          }
+        );
+        onClose();
+      } else {
+        toast.error(
+          `Unable to complete the request. ${message || "Please try again."}`,
+          {
+            id: loadingToast,
+            duration: 4000,
+          }
+        );
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error(
+        "Something went wrong while giving points. Please try again later.",
+        { id: loadingToast, duration: 4000 }
+      );
+    }
   };
 
   return (
@@ -71,11 +109,12 @@ export default function GivePointsModal({ onClose }: { onClose: () => void }) {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+        {/* 🔍 Student Search */}
         <div className="flex flex-col gap-2 relative">
           <label className="text-xs text-tertiary">Select Student</label>
 
-          <div className="bg-main h-10 rounded-sm flex items-center gap-2 p-2">
+          <div className="bg-main h-14 rounded-lg flex items-center gap-2 p-4">
             <SearchIcon className="text-white" size={18} />
             <input
               type="text"
@@ -83,7 +122,7 @@ export default function GivePointsModal({ onClose }: { onClose: () => void }) {
               value={inputValue}
               onChange={handleChange}
               onFocus={() => setShowResults(true)}
-              className="text-xs text-white font-poppins bg-transparent outline-none focus:ring-0 w-full placeholder:text-gray-400"
+              className="text-sm text-white font-poppins bg-transparent outline-none focus:ring-0 w-full placeholder:text-gray-400"
             />
           </div>
           {errors.student && (
@@ -126,12 +165,51 @@ export default function GivePointsModal({ onClose }: { onClose: () => void }) {
           )}
         </div>
 
+        {/* 🏷️ Type Selector (as Tabs) */}
+        <div className="flex flex-col gap-1">
+          <Controller
+            name="type"
+            control={control}
+            render={({ field }) => (
+              <div className="w-full">
+                <Tabs
+                  value={field.value}
+                  onValueChange={field.onChange}
+                  className="w-full"
+                >
+                  <TabsList className="border-2 w-full h-fit gap-6 bg-main border-none">
+                    <TabsTrigger
+                      value="participation"
+                      className="text-white font-poppins text-sm md:text-md p-3 rounded-md uppercase data-[state=active]:bg-secondary data-[state=active]:text-white"
+                    >
+                      Participation
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="character"
+                      className="text-white font-poppins text-sm md:text-md p-3 rounded-md uppercase data-[state=active]:bg-secondary data-[state=active]:text-white"
+                    >
+                      Character
+                    </TabsTrigger>
+                  </TabsList>
+                </Tabs>
+              </div>
+            )}
+          />
+
+          {errors.type && (
+            <p className="text-red-400 text-[10px] font-poppins">
+              {errors.type.message}
+            </p>
+          )}
+        </div>
+
+        {/* 🔢 Points Input */}
         <div className="flex flex-col gap-1">
           <input
             type="number"
             placeholder="Points"
             {...register("points")}
-            className="bg-main h-10 rounded-sm px-3 text-white font-poppins text-sm outline-none focus:ring-2 focus:ring-main/50"
+            className="bg-main h-14 rounded-lg px-3 text-white font-poppins text-sm outline-none focus:ring-2 focus:ring-main/50"
           />
           {errors.points && (
             <p className="text-red-400 text-[10px] font-poppins">
@@ -140,12 +218,7 @@ export default function GivePointsModal({ onClose }: { onClose: () => void }) {
           )}
         </div>
 
-        <Button
-          type="submit"
-          label="Submit"
-          loading={isSubmitting}
-          className="mt-2"
-        />
+        <Button type="submit" label="Submit" loading={isSubmitting} />
       </form>
     </div>
   );

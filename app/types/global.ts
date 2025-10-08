@@ -146,3 +146,29 @@ export interface SearchResult {
   year: number;
   section: Section;
 }
+
+export interface RawUserPoints {
+  id: string;
+  type: "participation" | "character";
+  points: number;
+  reason: string | null;
+  created_at: string;
+  given_by: {
+    id: string;
+    username: string;
+    avatar_url: string | null;
+  } | null;
+}
+
+export interface UserPoints {
+  id: string;
+  type: "participation" | "character";
+  points: number;
+  reason?: string | null;
+  created_at: string;
+  given_by?: {
+    id: string;
+    username: string;
+    avatar_url?: string | null;
+  } | null;
+}
