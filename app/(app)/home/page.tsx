@@ -180,32 +180,35 @@ export default function Home() {
                     />
                   </div>
                 ) : userPoints && userPoints.length > 0 ? (
-                  userPoints.slice(0, 5).map((point, index) => (
-                    <motion.div
-                      key={point.id}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.05, duration: 0.25 }}
-                      className="bg-white p-2 rounded-sm flex justify-between items-center"
-                    >
-                      <div className="flex flex-col w-[60%]">
-                        <p className="font-poppins text-xs text-secondary font-semibold">
-                          {point.reason || "No reason provided"}
-                        </p>
-                        <p className="font-poppins text-[8px] text-gray-500 capitalize">
-                          {point.type} points
-                        </p>
-                      </div>
-                      <p
-                        className={`font-poppins text-xs font-medium ${
-                          point.points > 0 ? "text-green-600" : "text-red-600"
-                        }`}
+                  userPoints
+                    .reverse()
+                    .slice(0, 5)
+                    .map((point, index) => (
+                      <motion.div
+                        key={point.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.05, duration: 0.25 }}
+                        className="bg-white p-2 rounded-sm flex justify-between items-center"
                       >
-                        {point.points > 0 ? "+" : ""}
-                        {point.points}
-                      </p>
-                    </motion.div>
-                  ))
+                        <div className="flex flex-col w-[60%]">
+                          <p className="font-poppins text-xs text-secondary font-semibold">
+                            {point.reason || "No reason provided"}
+                          </p>
+                          <p className="font-poppins text-[8px] text-gray-500 capitalize">
+                            {point.point_type} points
+                          </p>
+                        </div>
+                        <p
+                          className={`font-poppins text-xs font-medium ${
+                            point.points > 0 ? "text-green-600" : "text-red-600"
+                          }`}
+                        >
+                          {point.points > 0 ? "+" : ""}
+                          {point.points}
+                        </p>
+                      </motion.div>
+                    ))
                 ) : (
                   <p className="text-gray-400 font-poppins text-xs text-center mt-2">
                     No recent points yet.

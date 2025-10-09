@@ -7,7 +7,7 @@ export async function fetchUserPoints(userId: string): Promise<UserPoints[]> {
 
   const { data, error } = await supabase
     .from("user_points")
-    .select("id, reason, points, type, created_at")
+    .select("id, reason, points, point_type, created_at")
     .eq("user_id", userId);
 
   if (error || !data) {
@@ -17,7 +17,7 @@ export async function fetchUserPoints(userId: string): Promise<UserPoints[]> {
 
   return (data as RawUserPoints[]).map((up) => ({
     id: up.id,
-    type: up.type,
+    point_type: up.point_type,
     points: up.points,
     reason: up.reason,
     created_at: up.created_at,

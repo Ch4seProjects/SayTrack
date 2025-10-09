@@ -77,10 +77,10 @@ export const givePointsSchema = yup.object().shape({
     .string()
     .oneOf(["participation", "character"], "Select a point type")
     .required("Type is required"),
-  // reason: yup
-  //   .string()
-  //   .min(3, "Reason must be at least 3 characters")
-  //   .required("Reason is required"),
+  reason: yup
+    .string()
+    .min(3, "Reason must be at least 3 characters")
+    .required("Reason is required"),
 });
 
 export type SignUpType = yup.InferType<typeof signUpSchema>;

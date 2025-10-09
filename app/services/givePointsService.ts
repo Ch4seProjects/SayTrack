@@ -7,16 +7,16 @@ export async function givePoints(
 ): Promise<{ success: boolean; message: string }> {
   const supabase = getSupabaseClient();
 
-  const { student, points, type } = data;
+  const { student, points, type, reason } = data;
 
   try {
     // 1️⃣ Insert into user_points log
     const { error: insertError } = await supabase.from("user_points").insert({
       user_id: student.id,
       given_by: adminId,
-      type,
+      point_type: type,
       points,
-      reason: "Manual point assignment",
+      reason: reason,
     });
 
     if (insertError) throw insertError;
@@ -26,6 +26,7 @@ export async function givePoints(
       user_id: student.id,
       amount: points,
       point_type: type,
+      reason: reason,
     });
 
     if (rpcError) throw rpcError;

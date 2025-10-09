@@ -149,7 +149,7 @@ export interface SearchResult {
 
 export interface RawUserPoints {
   id: string;
-  type: "participation" | "character";
+  point_type: "participation" | "character";
   points: number;
   reason: string | null;
   created_at: string;
@@ -162,7 +162,7 @@ export interface RawUserPoints {
 
 export interface UserPoints {
   id: string;
-  type: "participation" | "character";
+  point_type: "participation" | "character";
   points: number;
   reason?: string | null;
   created_at: string;

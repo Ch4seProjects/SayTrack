@@ -94,7 +94,7 @@ export default function GivePointsModal({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <div className="relative py-2 flex flex-col gap-6">
+    <div className="relative py-2 flex flex-col gap-8">
       <X
         className="absolute top-2 right-3 text-tertiary text-lg cursor-pointer hover:opacity-80"
         onClick={onClose}
@@ -109,10 +109,48 @@ export default function GivePointsModal({ onClose }: { onClose: () => void }) {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
+        {/* 🏷️ Type Selector (as Tabs) */}
+        <div className="flex flex-col gap-2">
+          <Controller
+            name="type"
+            control={control}
+            render={({ field }) => (
+              <div className="w-full">
+                <Tabs
+                  value={field.value}
+                  onValueChange={field.onChange}
+                  className="w-full"
+                >
+                  <TabsList className="border-2 w-full h-fit gap-6 bg-main border-none">
+                    <TabsTrigger
+                      value="participation"
+                      className="text-white font-poppins text-sm md:text-md p-3 rounded-md uppercase data-[state=active]:bg-secondary data-[state=active]:text-white"
+                    >
+                      Participation
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="character"
+                      className="text-white font-poppins text-sm md:text-md p-3 rounded-md uppercase data-[state=active]:bg-secondary data-[state=active]:text-white"
+                    >
+                      Character
+                    </TabsTrigger>
+                  </TabsList>
+                </Tabs>
+              </div>
+            )}
+          />
+
+          {errors.type && (
+            <p className="text-red-400 text-[10px] font-poppins">
+              {errors.type.message}
+            </p>
+          )}
+        </div>
+
         {/* 🔍 Student Search */}
         <div className="flex flex-col gap-2 relative">
-          <label className="text-xs text-tertiary">Select Student</label>
+          <label className="text-xs text-tertiary">Enter Student</label>
 
           <div className="bg-main h-14 rounded-lg flex items-center gap-2 p-4">
             <SearchIcon className="text-white" size={18} />
@@ -165,46 +203,10 @@ export default function GivePointsModal({ onClose }: { onClose: () => void }) {
           )}
         </div>
 
-        {/* 🏷️ Type Selector (as Tabs) */}
-        <div className="flex flex-col gap-1">
-          <Controller
-            name="type"
-            control={control}
-            render={({ field }) => (
-              <div className="w-full">
-                <Tabs
-                  value={field.value}
-                  onValueChange={field.onChange}
-                  className="w-full"
-                >
-                  <TabsList className="border-2 w-full h-fit gap-6 bg-main border-none">
-                    <TabsTrigger
-                      value="participation"
-                      className="text-white font-poppins text-sm md:text-md p-3 rounded-md uppercase data-[state=active]:bg-secondary data-[state=active]:text-white"
-                    >
-                      Participation
-                    </TabsTrigger>
-                    <TabsTrigger
-                      value="character"
-                      className="text-white font-poppins text-sm md:text-md p-3 rounded-md uppercase data-[state=active]:bg-secondary data-[state=active]:text-white"
-                    >
-                      Character
-                    </TabsTrigger>
-                  </TabsList>
-                </Tabs>
-              </div>
-            )}
-          />
-
-          {errors.type && (
-            <p className="text-red-400 text-[10px] font-poppins">
-              {errors.type.message}
-            </p>
-          )}
-        </div>
-
         {/* 🔢 Points Input */}
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-2">
+          <label className="text-xs text-tertiary">Enter points</label>
+
           <input
             type="number"
             placeholder="Points"
@@ -218,7 +220,26 @@ export default function GivePointsModal({ onClose }: { onClose: () => void }) {
           )}
         </div>
 
-        <Button type="submit" label="Submit" loading={isSubmitting} />
+        {/* 🔢 Reason Input */}
+        <div className="flex flex-col gap-2">
+          <label className="text-xs text-tertiary">Enter reason</label>
+
+          <input
+            type="text"
+            placeholder="Reason"
+            {...register("reason")}
+            className="bg-main h-14 rounded-lg px-3 text-white font-poppins text-sm outline-none focus:ring-2 focus:ring-main/50"
+          />
+          {errors.reason && (
+            <p className="text-red-400 text-[10px] font-poppins">
+              {errors.reason.message}
+            </p>
+          )}
+        </div>
+
+        <div className="mt-8">
+          <Button type="submit" label="Submit" loading={isSubmitting} />
+        </div>
       </form>
     </div>
   );
