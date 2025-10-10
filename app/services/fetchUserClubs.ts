@@ -26,7 +26,7 @@ export async function fetchUserClubs(userId: string): Promise<UserClub[]> {
   }
 
   return (data as RawUserClub[]).map((uc) => ({
-    id: uc.club.id,
+    club_id: uc.club.id,
     name: uc.club.name,
     description: uc.club.description,
     role: uc.role,

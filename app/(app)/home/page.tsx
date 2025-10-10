@@ -351,7 +351,7 @@ export default function Home() {
             title="Give Points"
             description="Assign points to students based on their performance."
             icon={<ChevronsUp className="text-tertiary" size={24} />}
-            onClick={() => showModal("GIVE_POINTS", { extra: "data here" })}
+            onClick={() => showModal("GIVE_POINTS", {})}
           />
 
           <ActionTile

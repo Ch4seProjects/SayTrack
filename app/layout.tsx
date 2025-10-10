@@ -69,15 +69,17 @@ export default async function RootLayout({
                 },
               }}
             />
-            {session?.user ? (
-              <NotificationProvider userId={session?.user.id}>
-                <ModalProvider>
-                  <LeaderboardsProvider>{children}</LeaderboardsProvider>
-                </ModalProvider>
-              </NotificationProvider>
-            ) : (
-              children
-            )}
+            <LeaderboardsProvider>
+              <ModalProvider>
+                {session?.user ? (
+                  <NotificationProvider userId={session?.user.id}>
+                    {children}
+                  </NotificationProvider>
+                ) : (
+                  children
+                )}
+              </ModalProvider>
+            </LeaderboardsProvider>
           </SupabaseProvider>
         </ReactQueryProvider>
       </body>

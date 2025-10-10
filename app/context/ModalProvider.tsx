@@ -4,6 +4,7 @@ import { ReactNode, useState } from "react";
 import { ModalContext, ModalData } from "./ModalContext";
 import Modal from "react-modal";
 import GivePointsModal from "../components/Modals/GivePointsModal";
+import JoinAClub from "../components/Modals/JoinAClubModal";
 
 export const ModalProvider = ({ children }: { children: ReactNode }) => {
   const [modal, setModal] = useState<ModalData | null>(null);
@@ -18,7 +19,6 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
     <ModalContext.Provider value={{ showModal, closeModal }}>
       {children}
 
-      {/* 🔥 Global modal renderer */}
       <Modal
         isOpen={!!modal}
         onRequestClose={closeModal}
@@ -29,8 +29,9 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
         {modal?.type === "GIVE_POINTS" && (
           <GivePointsModal {...modal.props} onClose={closeModal} />
         )}
-        {/* You can add more modal types here later: */}
-        {/* {modal?.type === "AWARD_TITLE" && <AwardTitleModal {...modal.props} />} */}
+        {modal?.type === "JOIN_CLUB" && (
+          <JoinAClub {...modal.props} onClose={closeModal} />
+        )}
       </Modal>
     </ModalContext.Provider>
   );
