@@ -71,13 +71,9 @@ export default async function RootLayout({
             />
             <LeaderboardsProvider>
               <ModalProvider>
-                {session?.user ? (
-                  <NotificationProvider userId={session?.user.id}>
-                    {children}
-                  </NotificationProvider>
-                ) : (
-                  children
-                )}
+                <NotificationProvider userId={session?.user?.id}>
+                  {children}
+                </NotificationProvider>
               </ModalProvider>
             </LeaderboardsProvider>
           </SupabaseProvider>

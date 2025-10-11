@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { BeatLoader } from "react-spinners";
 import { User, Flag, Medal, Star } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface ArrayDataWrapperProps<
   T extends { id: string; name?: string; title?: string }
@@ -35,25 +36,32 @@ export default function ArrayDataWrapper<
           {data.map((item, index) => {
             if (type === "following" || type === "followers") {
               return (
-                <Link
-                  href={`/profile/${item.id}`}
-                  className="flex flex-col items-center gap-1 w-20"
+                <motion.div
                   key={item.id}
+                  whileTap={{ scale: 0.96 }}
+                  transition={{ duration: 0.1 }}
                 >
-                  <div className="w-10 h-10 bg-main rounded-full border-2 flex justify-center items-center">
-                    <User className="text-white" />
-                  </div>
-                  <p className="font-poppins text-white text-[10px] text-center">
-                    {item.name || item.id}
-                  </p>
-                </Link>
+                  <Link
+                    href={`/profile/${item.id}`}
+                    className="flex flex-col items-center gap-1 w-20"
+                  >
+                    <div className="w-10 h-10 bg-main rounded-full border-2 flex justify-center items-center">
+                      <User className="text-white" />
+                    </div>
+                    <p className="font-poppins text-white text-[10px] text-center">
+                      {item.name || item.id}
+                    </p>
+                  </Link>
+                </motion.div>
               );
             }
 
             return (
-              <div
+              <motion.div
                 className="flex flex-col items-center gap-1 w-20"
                 key={item.id ?? `${item.title}-${index}`}
+                whileTap={{ scale: 0.96 }}
+                transition={{ duration: 0.1 }}
               >
                 <div className="w-10 h-10 bg-main rounded-full border-2 flex justify-center items-center">
                   {mapIcons[type]}
@@ -61,7 +69,7 @@ export default function ArrayDataWrapper<
                 <p className="font-poppins text-white text-[10px] text-center">
                   {item.title || item.name}
                 </p>
-              </div>
+              </motion.div>
             );
           })}
         </div>

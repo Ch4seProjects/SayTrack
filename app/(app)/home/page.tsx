@@ -262,18 +262,23 @@ export default function Home() {
               </div>
             ) : (
               filteredUsers.slice(0, 5).map((user) => (
-                <Link
+                <motion.div
                   key={user.id}
-                  href={`/profile/${user.id}`}
-                  className="bg-white p-2 rounded-sm flex justify-between items-center"
+                  whileTap={{ scale: 0.96 }}
+                  transition={{ duration: 0.1 }}
                 >
-                  <p className="font-poppins text-xs text-secondary">
-                    {user.name}
-                  </p>
-                  <p className="font-poppins text-xs text-secondary">
-                    {user.totalPoints.toLocaleString()}
-                  </p>
-                </Link>
+                  <Link
+                    href={`/profile/${user.id}`}
+                    className="bg-white p-2 rounded-sm flex justify-between items-center"
+                  >
+                    <p className="font-poppins text-xs text-secondary">
+                      {user.name}
+                    </p>
+                    <p className="font-poppins text-xs text-secondary">
+                      {user.totalPoints.toLocaleString()}
+                    </p>
+                  </Link>
+                </motion.div>
               ))
             )}
           </div>

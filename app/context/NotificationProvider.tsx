@@ -11,19 +11,18 @@ export function NotificationProvider({
   userId,
 }: {
   children: React.ReactNode;
-  userId: string;
+  userId?: string;
 }) {
   const isAdmin = useIsAdmin();
 
   const fetchUserNotifications = async (): Promise<any[]> => {
     if (!userId || userId.trim() === "") {
-      console.warn("⚠️ fetchNotifications called without valid userId");
+      console.warn("⚠️ Skipping notifications fetch — no valid userId");
       return [];
     }
 
     const supabase = getSupabaseClient();
 
-    // If user is admin, fetch all notifications (no filtering)
     if (isAdmin) {
       const { data, error } = await supabase
         .from("notifications")

@@ -27,9 +27,11 @@ export default function ProgressBar({ userMeta }: ProgressBarProps) {
         className="bg-main rounded-r-lg flex justify-center items-center"
         style={{ width: `${userMeta.participationPercent}%` }}
       >
-        <p className="font-poppins text-white text-xs">
-          {userMeta.participationPercent}%
-        </p>
+        {userMeta.participationPercent !== 0 && (
+          <p className="font-poppins text-white text-xs">
+            {userMeta.participationPercent}%
+          </p>
+        )}
       </div>
     </div>
   );

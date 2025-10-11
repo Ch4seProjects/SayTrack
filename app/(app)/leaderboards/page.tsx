@@ -7,6 +7,7 @@ import { User } from "lucide-react";
 import { useLeaderboards } from "@/app/context/LeaderboardProvider";
 import { BeatLoader } from "react-spinners";
 import { LeaderboardCategory } from "@/app/types/global";
+import { motion } from "framer-motion";
 
 export default function Leaderboards() {
   const { filteredUsers, setCategory, category, loading } = useLeaderboards();
@@ -72,27 +73,32 @@ export default function Leaderboards() {
               index === 1 ? "mt-0" : index === 0 ? "mt-8" : "mt-12";
 
             return (
-              <Link
+              <motion.div
                 key={user.id}
-                href={`/profile/${user.id}`}
-                className={`flex flex-col items-center gap-1 ${marginTop}`}
+                whileTap={{ scale: 0.96 }}
+                transition={{ duration: 0.1 }}
               >
-                <div className="h-24 w-24 bg-white rounded-full flex justify-center items-center mb-2 relative">
-                  <User className="h-16 w-16 text-main" />
-                  <div
-                    className={`h-6 w-6 left-0 top-0 ${medalColors[index]} rounded-full absolute`}
-                  />
-                </div>
-                <p className="font-poppins text-sm text-white font-medium">
-                  {user.name}
-                </p>
-                <p className="font-poppins text-xs text-white">
-                  {user.section} {user.year}
-                </p>
-                <p className="font-poppins text-sm text-white font-medium">
-                  {user.totalPoints.toLocaleString()}
-                </p>
-              </Link>
+                <Link
+                  href={`/profile/${user.id}`}
+                  className={`flex flex-col items-center gap-1 ${marginTop}`}
+                >
+                  <div className="h-24 w-24 bg-white rounded-full flex justify-center items-center mb-2 relative">
+                    <User className="h-16 w-16 text-main" />
+                    <div
+                      className={`h-6 w-6 left-0 top-0 ${medalColors[index]} rounded-full absolute`}
+                    />
+                  </div>
+                  <p className="font-poppins text-sm text-white font-medium">
+                    {user.name}
+                  </p>
+                  <p className="font-poppins text-xs text-white">
+                    {user.section} {user.year}
+                  </p>
+                  <p className="font-poppins text-sm text-white font-medium">
+                    {user.totalPoints.toLocaleString()}
+                  </p>
+                </Link>
+              </motion.div>
             );
           })}
         </div>
@@ -101,27 +107,34 @@ export default function Leaderboards() {
       {/* Leaderboard List */}
       <div className="bg-gradient-to-t from-secondary to-main flex-1 rounded-tl-xl rounded-tr-xl p-6 flex flex-col gap-4 overflow-auto">
         {filteredUsers.slice(3, 10).map((user, index) => (
-          <Link
-            className="bg-white p-4 rounded-md flex gap-4 items-center"
+          <motion.div
             key={user.id}
-            href={`/profile/${user.id}`}
+            whileTap={{ scale: 0.96 }}
+            transition={{ duration: 0.1 }}
           >
-            <p className="font-poppins text-sm font-medium">{index + 4}</p>
-            <div className="flex gap-2 items-center">
-              <div className="h-10 w-10 bg-main rounded-full flex justify-center items-center">
-                <User className="text-white" />
+            <Link
+              className="bg-white p-4 rounded-md flex gap-4 items-center"
+              href={`/profile/${user.id}`}
+            >
+              <p className="font-poppins text-sm font-medium">{index + 4}</p>
+              <div className="flex gap-2 items-center">
+                <div className="h-10 w-10 bg-main rounded-full flex justify-center items-center">
+                  <User className="text-white" />
+                </div>
+                <div className="flex flex-col">
+                  <p className="font-poppins font-medium text-sm">
+                    {user.name}
+                  </p>
+                  <p className="font-poppins text-xs">
+                    {user.section} {user.year}
+                  </p>
+                </div>
               </div>
-              <div className="flex flex-col">
-                <p className="font-poppins font-medium text-sm">{user.name}</p>
-                <p className="font-poppins text-xs">
-                  {user.section} {user.year}
-                </p>
-              </div>
-            </div>
-            <p className="font-poppins font-semibold text-xs flex-1 text-end">
-              {user.totalPoints.toLocaleString()}
-            </p>
-          </Link>
+              <p className="font-poppins font-semibold text-xs flex-1 text-end">
+                {user.totalPoints.toLocaleString()}
+              </p>
+            </Link>
+          </motion.div>
         ))}
       </div>
     </div>
