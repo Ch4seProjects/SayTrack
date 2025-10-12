@@ -27,8 +27,14 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: { template: "Saytrack | %s", default: "Saytrack" },
-  description: "Made by Ch4se",
+  title: "SayTrack",
+  description: "Track points, clubs, and achievements with SayTrack.",
+  manifest: "/manifest.json",
+  themeColor: "#112509",
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export default async function RootLayout({
@@ -71,9 +77,13 @@ export default async function RootLayout({
             />
             <LeaderboardsProvider>
               <ModalProvider>
-                <NotificationProvider userId={session?.user?.id}>
-                  {children}
-                </NotificationProvider>
+                {session?.user?.id ? (
+                  <NotificationProvider userId={session.user.id}>
+                    {children}
+                  </NotificationProvider>
+                ) : (
+                  children
+                )}
               </ModalProvider>
             </LeaderboardsProvider>
           </SupabaseProvider>
