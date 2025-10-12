@@ -12,6 +12,7 @@ import { useUserProfile } from "@/app/hooks/useUserProfile";
 import { useUserFollowings } from "@/app/hooks/useUserFollowings";
 import { useSupabase } from "@/app/context/SupabaseProvider";
 import { useModalContext } from "@/app/context/ModalContext";
+import { useIsAdmin } from "@/app/hooks/useIsAdmin";
 
 interface ProfilePageProps {
   params: Promise<{ id: string }>;
@@ -22,6 +23,7 @@ export default function Profile({ params }: ProfilePageProps) {
   const { user } = useSupabase();
   const router = useRouter();
   const { showModal } = useModalContext();
+  const isAdmin = useIsAdmin();
 
   const { data: profile, isLoading: profileLoading } = useUserProfile(id);
   const { data: achievements = [], isLoading: achievementsLoading } =
@@ -54,7 +56,7 @@ export default function Profile({ params }: ProfilePageProps) {
       {/* Header */}
       <div className="flex justify-between items-center">
         <ChevronLeft onClick={() => router.back()} className="text-white" />
-        {user?.id !== id && (
+        {!isAdmin && user?.id !== id && (
           <ShadcnButton
             className="bg-main"
             onClick={() =>
