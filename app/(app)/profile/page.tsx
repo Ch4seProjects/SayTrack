@@ -55,7 +55,8 @@ export default function Profile() {
         {/* Header */}
         <div className="flex justify-between items-center">
           <p className="text-white font-poppins text-xl">Profile</p>
-          <ShadcnButton className="bg-main">Edit Profile</ShadcnButton>
+          {/* TODO: Implement edit profile */}
+          {/* <ShadcnButton className="bg-main">Edit Profile</ShadcnButton> */}
         </div>
 
         {/* Profile Information */}

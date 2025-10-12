@@ -1,11 +1,9 @@
 "use client";
 
-import { useState, use } from "react";
+import { use } from "react";
 import { useRouter } from "next/navigation";
-import { SelectComponent } from "@/app/components/Select";
 import { Button as ShadcnButton } from "@/components/ui/button";
 import { ChevronLeft, User } from "lucide-react";
-import { LEADERBOARD_CATEGORIES } from "@/app/lib/constants";
 import ArrayDataWrapper from "@/app/components/ArrayDataWrapper";
 import { BeatLoader } from "react-spinners";
 import { useUserAchievements } from "@/app/hooks/useUserAchievements";
@@ -24,7 +22,6 @@ export default function Profile({ params }: ProfilePageProps) {
   const { user } = useSupabase();
   const router = useRouter();
   const { showModal } = useModalContext();
-  const [category, setCategory] = useState("SECTION");
 
   const { data: profile, isLoading: profileLoading } = useUserProfile(id);
   const { data: achievements = [], isLoading: achievementsLoading } =
@@ -95,17 +92,7 @@ export default function Profile({ params }: ProfilePageProps) {
         <p className="font-medium font-poppins text-lg text-tertiary">
           Progress
         </p>
-        <div className="flex flex-col items-center gap-2 absolute top-4 right-4">
-          <SelectComponent
-            category={category}
-            setCategory={setCategory}
-            entries={LEADERBOARD_CATEGORIES}
-            backgroundColor="bg-secondary"
-          />
-          <p className="text-white font-poppins text-sm font-light">
-            <span className="text-lg font-semibold">13</span>th
-          </p>
-        </div>
+
         <p className="font-medium font-poppins text-lg text-white">
           {profile.totalPoints.toLocaleString()} pts.
         </p>
