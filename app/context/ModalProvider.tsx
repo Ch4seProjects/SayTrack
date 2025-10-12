@@ -5,6 +5,7 @@ import { ModalContext, ModalData } from "./ModalContext";
 import Modal from "react-modal";
 import GivePointsModal from "../components/Modals/GivePointsModal";
 import JoinAClub from "../components/Modals/JoinAClubModal";
+import FollowActionModal from "../components/Modals/FollowActionModal";
 
 export const ModalProvider = ({ children }: { children: ReactNode }) => {
   const [modal, setModal] = useState<ModalData | null>(null);
@@ -31,6 +32,9 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
         )}
         {modal?.type === "JOIN_CLUB" && (
           <JoinAClub {...modal.props} onClose={closeModal} />
+        )}
+        {modal?.type === "FOLLOW_ACTION" && (
+          <FollowActionModal {...modal.props} onClose={closeModal} />
         )}
       </Modal>
     </ModalContext.Provider>

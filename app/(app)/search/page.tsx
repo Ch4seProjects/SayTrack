@@ -10,9 +10,11 @@ import { useClubs } from "@/app/hooks/useClubs";
 import { useUserClubs } from "@/app/hooks/useUserClubs";
 import { useSupabase } from "@/app/context/SupabaseProvider";
 import { useModalContext } from "@/app/context/ModalContext";
+import { useIsAdmin } from "@/app/hooks/useIsAdmin";
 
 export default function Search() {
   const { user, loadingUser } = useSupabase();
+  const isAdmin = useIsAdmin();
   const { showModal } = useModalContext();
   const [inputValue, setInputValue] = useState("");
   const [query, setQuery] = useState("");
@@ -81,7 +83,8 @@ export default function Search() {
         ))}
 
         {/* --- Display Clubs --- */}
-        {!clubsLoading &&
+        {!isAdmin &&
+          !clubsLoading &&
           !userClubsLoading &&
           !loadingUser &&
           clubs.length > 0 && (
@@ -125,7 +128,10 @@ export default function Search() {
                         <p
                           className="font-poppins text-tertiary text-xs uppercase"
                           onClick={() =>
-                            showModal("JOIN_CLUB", { clubName: club.name, club_id: club.id })
+                            showModal("JOIN_CLUB", {
+                              clubName: club.name,
+                              club_id: club.id,
+                            })
                           }
                         >
                           Join

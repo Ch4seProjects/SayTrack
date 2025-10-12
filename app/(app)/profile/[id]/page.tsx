@@ -11,6 +11,9 @@ import { BeatLoader } from "react-spinners";
 import { useUserAchievements } from "@/app/hooks/useUserAchievements";
 import { useUserTitles } from "@/app/hooks/useUserTitles";
 import { useUserProfile } from "@/app/hooks/useUserProfile";
+import { useUserFollowings } from "@/app/hooks/useUserFollowings";
+import { useSupabase } from "@/app/context/SupabaseProvider";
+import { useModalContext } from "@/app/context/ModalContext";
 
 interface ProfilePageProps {
   params: Promise<{ id: string }>;
@@ -18,15 +21,20 @@ interface ProfilePageProps {
 
 export default function Profile({ params }: ProfilePageProps) {
   const { id } = use(params);
+  const { user } = useSupabase();
   const router = useRouter();
+  const { showModal } = useModalContext();
   const [category, setCategory] = useState("SECTION");
 
   const { data: profile, isLoading: profileLoading } = useUserProfile(id);
   const { data: achievements = [], isLoading: achievementsLoading } =
     useUserAchievements(id);
   const { data: titles = [], isLoading: titlesLoading } = useUserTitles(id);
+  const { data: followings = [] } = useUserFollowings(user?.id);
 
   const isLoading = achievementsLoading || titlesLoading || profileLoading;
+
+  const isFollowing = followings.some((f) => f.id === id);
 
   if (isLoading) {
     return (
@@ -49,7 +57,20 @@ export default function Profile({ params }: ProfilePageProps) {
       {/* Header */}
       <div className="flex justify-between items-center">
         <ChevronLeft onClick={() => router.back()} className="text-white" />
-        <ShadcnButton className="bg-main">Follow</ShadcnButton>
+        {user?.id !== id && (
+          <ShadcnButton
+            className="bg-main"
+            onClick={() =>
+              showModal("FOLLOW_ACTION", {
+                userName: profile.name,
+                isFollowing,
+                id: id,
+              })
+            }
+          >
+            {isFollowing ? "Following" : "Follow"}
+          </ShadcnButton>
+        )}
       </div>
 
       {/* Profile Info */}
