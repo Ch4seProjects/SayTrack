@@ -1,6 +1,6 @@
 "use client";
 
-import { use } from "react";
+import { use, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button as ShadcnButton } from "@/components/ui/button";
 import { ChevronLeft, User } from "lucide-react";
@@ -13,6 +13,11 @@ import { useUserFollowings } from "@/app/hooks/useUserFollowings";
 import { useSupabase } from "@/app/context/SupabaseProvider";
 import { useModalContext } from "@/app/context/ModalContext";
 import { useIsAdmin } from "@/app/hooks/useIsAdmin";
+import { useUserClubs } from "@/app/hooks/useUserClubs";
+import {
+  countUserFollowing,
+  countUserFollowers,
+} from "@/app/services/fetchUserFollowing";
 
 interface ProfilePageProps {
   params: Promise<{ id: string }>;
@@ -25,15 +30,43 @@ export default function Profile({ params }: ProfilePageProps) {
   const { showModal } = useModalContext();
   const isAdmin = useIsAdmin();
 
+  const [followingCount, setFollowingCount] = useState<number>(0);
+  const [followerCount, setFollowerCount] = useState<number>(0);
+
   const { data: profile, isLoading: profileLoading } = useUserProfile(id);
   const { data: achievements = [], isLoading: achievementsLoading } =
     useUserAchievements(id);
   const { data: titles = [], isLoading: titlesLoading } = useUserTitles(id);
   const { data: followings = [] } = useUserFollowings(user?.id);
+  const {
+    data: joinedClubs = [],
+    isLoading: clubsLoading,
+    error: clubsError,
+  } = useUserClubs(id);
 
-  const isLoading = achievementsLoading || titlesLoading || profileLoading;
+  const isLoading =
+    achievementsLoading || titlesLoading || profileLoading || clubsLoading;
 
   const isFollowing = followings.some((f) => f.id === id);
+
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchCounts = async () => {
+      try {
+        const [following, followers] = await Promise.all([
+          countUserFollowing(id),
+          countUserFollowers(id),
+        ]);
+        setFollowingCount(following);
+        setFollowerCount(followers);
+      } catch (err) {
+        console.error("Error fetching user counts:", err);
+      }
+    };
+
+    fetchCounts();
+  }, [id]);
 
   if (isLoading) {
     return (
@@ -82,9 +115,10 @@ export default function Profile({ params }: ProfilePageProps) {
           <p>{profile.email}</p>
           <p>Section: {profile.section}</p>
           <p>Batch: {profile.year}</p>
-          {/* placeholders until you join with following/clubs */}
           <div className="flex gap-2">
-            <p>0 Following</p>|<p>0 Joined Clubs</p>
+            <p>{followingCount} Following</p>
+            <span>|</span>
+            <p>{followerCount} Followers</p>
           </div>
         </div>
       </div>
@@ -112,6 +146,16 @@ export default function Profile({ params }: ProfilePageProps) {
         title="Achievements"
         data={achievements}
         type="achievements"
+        isLoading={isLoading}
+      />
+      <ArrayDataWrapper
+        title="Joined Clubs"
+        data={joinedClubs.map((club) => ({
+          id: club.club_id,
+          name: club.name,
+          title: club.name,
+        }))}
+        type="clubs"
         isLoading={isLoading}
       />
     </div>

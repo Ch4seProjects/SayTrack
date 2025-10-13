@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Poppins } from "next/font/google";
 import "./styles/globals.css";
 import { cn } from "@/lib/utils";
@@ -30,11 +30,14 @@ export const metadata: Metadata = {
   title: "SayTrack",
   description: "Track points, clubs, and achievements with SayTrack.",
   manifest: "/manifest.json",
-  themeColor: "#112509",
   icons: {
     icon: "/logo.png",
     apple: "/logo.png",
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#112509",
 };
 
 export default async function RootLayout({

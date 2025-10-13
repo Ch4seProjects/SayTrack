@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useContext } from "react";
+import { useState, useMemo, useContext, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { LeaderboardCategory, Profile } from "../types/global";
 import { fetchLeaderboardProfiles } from "../services/fetchLeaderboardProfiles";
@@ -24,6 +24,11 @@ export function LeaderboardsProvider({
     queryKey: ["leaderboardProfiles"],
     queryFn: fetchLeaderboardProfiles,
   });
+
+  // Optional: refetch on category change if you want fresh data
+  useEffect(() => {
+    refetch();
+  }, [category, refetch]);
 
   const filteredUsers = useMemo(() => {
     if (!user) return [];
