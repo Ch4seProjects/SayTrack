@@ -271,9 +271,14 @@ export default function Home() {
                     href={`/profile/${user.id}`}
                     className="bg-white p-2 rounded-sm flex justify-between items-center"
                   >
-                    <p className="font-poppins text-xs text-secondary">
-                      {user.name}
-                    </p>
+                    <div className="flex flex-col ">
+                      <p className="font-poppins text-sm font-medium text-secondary">
+                        {user.name}
+                      </p>
+                      <p className="font-poppins text-[10px] font-light text-secondary">
+                        {user.email}
+                      </p>
+                    </div>
                     <p className="font-poppins text-xs text-secondary">
                       {user.totalPoints.toLocaleString()}
                     </p>

@@ -9,10 +9,8 @@ export const signUpSchema = yup.object({
   name: yup
     .string()
     .required("Name is required")
-    .matches(
-      /^[A-Za-z]+(?:\s[A-Za-z]+)+$/,
-      "Please enter your full name (first and last)"
-    ),
+    .trim()
+    .max(200, "Name is too long"),
   email: yup
     .string()
     .required("Email is required")
@@ -83,6 +81,33 @@ export const givePointsSchema = yup.object().shape({
     .required("Reason is required"),
 });
 
+export const editProfileSchema = yup.object({
+  name: yup
+    .string()
+    .required("Name is required")
+    .trim()
+    .max(200, "Name is too long"),
+
+  year: yup
+    .string()
+    .nullable()
+    .matches(/^\d{4}$/, "Year must be a 4-digit number")
+    .test(
+      "is-valid-year",
+      "Year must be between 1900 and 2100",
+      (value) =>
+        !value || (parseInt(value, 10) >= 1900 && parseInt(value, 10) <= 2100)
+    )
+    .optional(),
+
+  section: yup
+    .string()
+    .nullable()
+    .oneOf(SECTIONS, "Invalid section")
+    .optional(),
+});
+
 export type SignUpType = yup.InferType<typeof signUpSchema>;
 export type LoginType = yup.InferType<typeof loginSchema>;
 export type GivePointsType = yup.InferType<typeof givePointsSchema>;
+export type EditProfileType = yup.InferType<typeof editProfileSchema>;

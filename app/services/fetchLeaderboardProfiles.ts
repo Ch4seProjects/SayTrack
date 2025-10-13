@@ -8,7 +8,7 @@ export async function fetchLeaderboardProfiles(): Promise<Profile[]> {
   const { data, error } = await supabase
     .from("profiles")
     .select(
-      "id, name, year, section, type, character_points, participation_points"
+      "id, name, year, email, section, type, character_points, participation_points"
     );
 
   if (error) {

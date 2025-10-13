@@ -91,7 +91,7 @@ export default function Signup() {
         )}
       />
       <Input
-        placeholder="Full Name"
+        placeholder="Name"
         type={"text"}
         {...register("name")}
         error={errors.name?.message}

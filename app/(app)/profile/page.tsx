@@ -14,6 +14,7 @@ import { User } from "lucide-react";
 import { useUserAchievements } from "@/app/hooks/useUserAchievements";
 import { useUserTitles } from "@/app/hooks/useUserTitles";
 import { useIsAdmin } from "@/app/hooks/useIsAdmin";
+import { useModalContext } from "@/app/context/ModalContext";
 
 export default function Profile() {
   const router = useRouter();
@@ -21,6 +22,7 @@ export default function Profile() {
   const { user, loadingUser } = useSupabase();
   const userMeta = useUserMeta(user);
   const isAdmin = useIsAdmin();
+  const { showModal } = useModalContext();
 
   const { data: achievements = [], isLoading: achievementsLoading } =
     useUserAchievements(user?.id);
@@ -55,8 +57,12 @@ export default function Profile() {
         {/* Header */}
         <div className="flex justify-between items-center">
           <p className="text-white font-poppins text-xl">Profile</p>
-          {/* TODO: Implement edit profile */}
-          {/* <ShadcnButton className="bg-main">Edit Profile</ShadcnButton> */}
+          <ShadcnButton
+            className="bg-main"
+            onClick={() => showModal("EDIT_PROFILE", {})}
+          >
+            Edit Profile
+          </ShadcnButton>
         </div>
 
         {/* Profile Information */}

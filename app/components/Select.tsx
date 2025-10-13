@@ -14,16 +14,24 @@ interface SelectProps {
   onChange?: (value: string) => void;
   error?: string;
   placeholder?: string;
+  className?: string;
 }
 
-export function Select({ value, onChange, error, placeholder }: SelectProps) {
+export function Select({
+  value,
+  onChange,
+  error,
+  placeholder,
+  className,
+}: SelectProps) {
   return (
     <div className="w-full relative">
       <ShadcnSelect value={value} onValueChange={onChange}>
         <SelectTrigger
           className={cn(
             "bg-white w-full font-poppins text-lg p-7",
-            error && "border-2 border-red-600"
+            error && "border-2 border-red-600",
+            className
           )}
         >
           <SelectValue placeholder={placeholder} />
