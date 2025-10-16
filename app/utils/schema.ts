@@ -107,7 +107,70 @@ export const editProfileSchema = yup.object({
     .optional(),
 });
 
+export const clubSchema = yup.object().shape({
+  name: yup
+    .string()
+    .required("Club name is required")
+    .min(3, "Club name must be at least 3 characters long")
+    .max(50, "Club name must be at most 50 characters"),
+  description: yup
+    .string()
+    .required("Description is required")
+    .min(10, "Description must be at least 10 characters long")
+    .max(200, "Description must be at most 200 characters"),
+});
+
+export const titleSchema = yup.object().shape({
+  name: yup
+    .string()
+    .required("Title name is required")
+    .min(3, "Title name must be at least 3 characters long")
+    .max(50, "Title name must be at most 50 characters"),
+  description: yup
+    .string()
+    .required("Description is required")
+    .min(10, "Description must be at least 10 characters long")
+    .max(200, "Description must be at most 200 characters"),
+});
+
+export const achievementSchema = yup.object().shape({
+  name: yup
+    .string()
+    .required("Achievement name is required")
+    .min(3, "Achievement name must be at least 3 characters long")
+    .max(50, "Achievement name must be at most 50 characters"),
+  description: yup
+    .string()
+    .required("Description is required")
+    .min(10, "Description must be at least 10 characters long")
+    .max(200, "Description must be at most 200 characters"),
+});
+
+export const notificationSchema = yup.object().shape({
+  title: yup
+    .string()
+    .required("Notification title is required")
+    .min(3, "Title must be at least 3 characters long")
+    .max(100, "Title must be at most 100 characters"),
+
+  message: yup
+    .string()
+    .required("Message is required")
+    .min(10, "Message must be at least 10 characters long")
+    .max(500, "Message must be at most 500 characters"),
+
+  club_id: yup
+    .string()
+    .nullable()
+    .optional()
+    .transform((v) => (v === "" ? null : v)),
+});
+
 export type SignUpType = yup.InferType<typeof signUpSchema>;
 export type LoginType = yup.InferType<typeof loginSchema>;
 export type GivePointsType = yup.InferType<typeof givePointsSchema>;
 export type EditProfileType = yup.InferType<typeof editProfileSchema>;
+export type AddTitleType = yup.InferType<typeof titleSchema>;
+export type AddAchievementType = yup.InferType<typeof achievementSchema>;
+export type AddNotificationType = yup.InferType<typeof notificationSchema>;
+export type AddClubType = yup.InferType<typeof clubSchema>;

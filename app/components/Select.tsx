@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/select";
 import { SECTIONS } from "../lib/constants";
 import { cn } from "@/lib/utils";
+import { Club } from "../types/global";
 
 interface SelectProps {
   value?: string;
@@ -15,6 +16,8 @@ interface SelectProps {
   error?: string;
   placeholder?: string;
   className?: string;
+  options: Club[];
+  type?: "club" | "section";
 }
 
 export function Select({
@@ -23,6 +26,8 @@ export function Select({
   error,
   placeholder,
   className,
+  options,
+  type = "section",
 }: SelectProps) {
   return (
     <div className="w-full relative">
@@ -37,11 +42,20 @@ export function Select({
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent className="font-poppins">
-          {SECTIONS.map((section) => (
-            <SelectItem key={section} value={section}>
-              {section}
-            </SelectItem>
-          ))}
+          {options.length > 0 ? (
+            options.map((option) => (
+              <SelectItem
+                key={option.id}
+                value={type === "club" ? option.id : option.name}
+              >
+                {option.name}
+              </SelectItem>
+            ))
+          ) : (
+            <div className="text-sm text-gray-400 px-3 py-2">
+              No options available
+            </div>
+          )}
         </SelectContent>
       </ShadcnSelect>
       {error && (

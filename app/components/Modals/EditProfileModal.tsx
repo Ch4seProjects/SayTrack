@@ -10,6 +10,7 @@ import { useSupabase } from "@/app/context/SupabaseProvider";
 import { updateProfile } from "@/app/services/updateProfile";
 import { editProfileSchema } from "@/app/utils/schema";
 import { X } from "lucide-react";
+import { SECTIONS_OBJECT } from "@/app/lib/constants";
 
 type EditProfileForm = {
   name: string;
@@ -151,6 +152,7 @@ export default function EditProfileModal({ onClose }: { onClose: () => void }) {
                 placeholder="Section"
                 error={errors.section?.message}
                 className="bg-main border-none px-3 text-sm"
+                options={SECTIONS_OBJECT}
               />
             )}
           />

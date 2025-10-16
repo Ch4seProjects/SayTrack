@@ -7,6 +7,8 @@ import {
   Medal,
   Star,
   ChevronDown,
+  Trophy,
+  Flag,
 } from "lucide-react";
 import { SelectComponent } from "@/app/components/Select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -349,34 +351,59 @@ export default function Home() {
         </div> */}
 
         {/* Admin Actions */}
-        <div className="grid grid-cols-2 gap-4">
-          <ActionTile
-            title="Create Notification"
-            description="Send notifications to keep everyone updated."
-            icon={<Bell className="text-tertiary" size={24} />}
-            isComingSoon
-          />
+        <div className="flex flex-col gap-2">
+          <p className="font-poppins text-xl text-white">Actions</p>
+          <div className="grid grid-cols-2 gap-4">
+            <ActionTile
+              title="Award Points"
+              description="Award points to students based on their performance."
+              icon={<ChevronsUp className="text-tertiary" size={24} />}
+              onClick={() => showModal("GIVE_POINTS", {})}
+            />
+            <ActionTile
+              title="Assign Titles"
+              description="Assign titles to recognize outstanding achievements or milestones."
+              icon={<Star className="text-tertiary" size={24} />}
+              isComingSoon
+            />
+            <ActionTile
+              title="Grant Achievements"
+              description="Grant achievements to acknowledge individual accomplishments."
+              icon={<Medal className="text-tertiary" size={24} />}
+              isComingSoon
+            />
+          </div>
+        </div>
 
-          <ActionTile
-            title="Give Points"
-            description="Assign points to students based on their performance."
-            icon={<ChevronsUp className="text-tertiary" size={24} />}
-            onClick={() => showModal("GIVE_POINTS", {})}
-          />
-
-          <ActionTile
-            title="Award Title"
-            description="Grant titles to recognize outstanding achievements or milestones."
-            icon={<Star className="text-tertiary" size={24} />}
-            isComingSoon
-          />
-
-          <ActionTile
-            title="Award Achievements"
-            description="Give achievements to acknowledge individual accomplishments."
-            icon={<Medal className="text-tertiary" size={24} />}
-            isComingSoon
-          />
+        {/* Admin Manage */}
+        <div className="flex flex-col gap-2">
+          <p className="font-poppins text-xl text-white">Manage</p>
+          <div className="grid grid-cols-2 gap-4">
+            <ActionTile
+              title="Manage Notifications"
+              description="Send notifications to keep everyone updated."
+              icon={<Trophy className="text-tertiary" size={24} />}
+              onClick={() => showModal("ADD_NOTIFICATION", {})}
+            />
+            <ActionTile
+              title="Manage Title Collection"
+              description="Add available titles for users."
+              icon={<Bell className="text-tertiary" size={24} />}
+              onClick={() => showModal("ADD_TITLE", {})}
+            />
+            <ActionTile
+              title="Manage Achievement Collection"
+              description="Create achievement badges and milestones."
+              icon={<Medal className="text-tertiary" size={24} />}
+              onClick={() => showModal("ADD_ACHIEVEMENT", {})}
+            />
+            <ActionTile
+              title="Manage Club Collection"
+              description="Create and manage all school clubs."
+              icon={<Flag className="text-tertiary" size={24} />}
+              onClick={() => showModal("ADD_CLUB", {})}
+            />
+          </div>
         </div>
       </div>
     );

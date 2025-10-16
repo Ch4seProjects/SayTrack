@@ -77,7 +77,10 @@ export default function Search() {
               <p className="text-white font-poppins font-medium text-sm">
                 {user.name}
               </p>
-              <p className="text-white font-poppins text-xs">{`${user.section} ${user.year}`}</p>
+              <p className="text-gray-300 font-poppins text-[10px]">
+                {user.email}
+              </p>
+              <p className="text-gray-300 font-poppins text-[10px]">{`${user.section} ${user.year}`}</p>
             </div>
           </Link>
         ))}

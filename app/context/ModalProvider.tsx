@@ -7,6 +7,10 @@ import GivePointsModal from "../components/Modals/GivePointsModal";
 import JoinAClub from "../components/Modals/JoinAClubModal";
 import FollowActionModal from "../components/Modals/FollowActionModal";
 import EditProfileModal from "../components/Modals/EditProfileModal";
+import AddTitleModal from "../components/Modals/AddTitleModal";
+import AddNotificationModal from "../components/Modals/AddNotificationModal";
+import AddAchievementModal from "../components/Modals/AddAchievementModal";
+import AddClubModal from "../components/Modals/AddClubModal";
 
 export const ModalProvider = ({ children }: { children: ReactNode }) => {
   const [modal, setModal] = useState<ModalData | null>(null);
@@ -39,6 +43,18 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
         )}
         {modal?.type === "EDIT_PROFILE" && (
           <EditProfileModal {...modal.props} onClose={closeModal} />
+        )}
+        {modal?.type === "ADD_TITLE" && (
+          <AddTitleModal {...modal.props} onClose={closeModal} />
+        )}
+        {modal?.type === "ADD_NOTIFICATION" && (
+          <AddNotificationModal {...modal.props} onClose={closeModal} />
+        )}
+        {modal?.type === "ADD_ACHIEVEMENT" && (
+          <AddAchievementModal {...modal.props} onClose={closeModal} />
+        )}
+        {modal?.type === "ADD_CLUB" && (
+          <AddClubModal {...modal.props} onClose={closeModal} />
         )}
       </Modal>
     </ModalContext.Provider>

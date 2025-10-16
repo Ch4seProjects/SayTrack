@@ -14,6 +14,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { signUpSchema, SignUpType } from "@/app/utils/schema";
 import { ACCOUNT_TYPES } from "@/app/lib/constants";
 import { getSupabaseClient } from "@/app/utils/client";
+import { SECTIONS_OBJECT } from "@/app/lib/constants";
 
 export default function Signup() {
   const supabase = getSupabaseClient();
@@ -119,6 +120,7 @@ export default function Signup() {
                 onChange={field.onChange}
                 error={errors.section?.message}
                 placeholder="Section"
+                options={SECTIONS_OBJECT}
               />
             )}
           />
