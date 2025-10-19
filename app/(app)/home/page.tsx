@@ -370,7 +370,7 @@ export default function Home() {
               title="Grant Achievements"
               description="Grant achievements to acknowledge individual accomplishments."
               icon={<Medal className="text-tertiary" size={24} />}
-              isComingSoon
+              onClick={() => showModal("AWARD_ACHIEVEMENTS", {})}
             />
           </div>
         </div>

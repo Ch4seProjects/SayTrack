@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { Flag, Search as SearchIcon } from "lucide-react";
+import { Flag, Search as SearchIcon, User } from "lucide-react";
 import { BeatLoader } from "react-spinners";
 import debounce from "lodash/debounce";
 import { useSearchProfiles } from "@/app/hooks/useSearchProfiles";
@@ -72,7 +72,9 @@ export default function Search() {
             key={user.id}
             className="flex gap-2 items-center p-2 hover:bg-gray-800 rounded-md transition"
           >
-            <div className="h-10 w-10 bg-white rounded-full" />
+            <div className="w-10 h-10 bg-main rounded-full border-2 flex justify-center items-center">
+              <User className="text-white" />
+            </div>
             <div className="flex flex-col">
               <p className="text-white font-poppins font-medium text-sm">
                 {user.name}

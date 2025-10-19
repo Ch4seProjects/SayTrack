@@ -9,7 +9,7 @@ export async function fetchTitles(): Promise<Title[]> {
     .select("id, name, description");
 
   if (error || !data) {
-    console.error("Error fetching clubs:", error);
+    console.error("Error fetching titles:", error);
     return [];
   }
 

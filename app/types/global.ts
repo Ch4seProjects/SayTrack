@@ -8,7 +8,9 @@ export interface Points {
 }
 
 export interface Achievement {
-  title: string;
+  id: string;
+  name: string;
+  description: string;
 }
 
 export interface Title {

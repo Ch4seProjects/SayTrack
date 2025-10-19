@@ -9,14 +9,21 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { BeatLoader } from "react-spinners";
 import toast from "react-hot-toast";
 import { useSearchProfiles } from "@/app/hooks/useSearchProfiles";
-import { awardTitleSchema, AwardTitleType } from "@/app/utils/schema";
+import {
+  awardAchievementSchema,
+  AwardAchievementType,
+} from "@/app/utils/schema";
 import { Button } from "@/app/components/Button";
 import { useSupabase } from "@/app/context/SupabaseProvider";
-import { awardTitle } from "@/app/services/awardTitles";
+import { awardAchievements } from "@/app/services/awardAchievements";
 import { Select } from "@/app/components/Select";
-import { useTitles } from "@/app/hooks/useAllTitles";
+import { useAchievements } from "@/app/hooks/useAllAchievements";
 
-export default function AssignTitleModal({ onClose }: { onClose: () => void }) {
+export default function AssignAchievementsModal({
+  onClose,
+}: {
+  onClose: () => void;
+}) {
   const [inputValue, setInputValue] = useState("");
   const [query, setQuery] = useState("");
   const [showResults, setShowResults] = useState(false);
@@ -28,7 +35,7 @@ export default function AssignTitleModal({ onClose }: { onClose: () => void }) {
   );
 
   const { data: results = [], isLoading } = useSearchProfiles(query);
-  const { data: titles = [], isLoading: titlesLoading } = useTitles();
+  const { data: achievement = [] } = useAchievements();
 
   const {
     register,
@@ -37,8 +44,8 @@ export default function AssignTitleModal({ onClose }: { onClose: () => void }) {
     control,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<AwardTitleType>({
-    resolver: yupResolver(awardTitleSchema),
+  } = useForm<AwardAchievementType>({
+    resolver: yupResolver(awardAchievementSchema),
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,7 +61,7 @@ export default function AssignTitleModal({ onClose }: { onClose: () => void }) {
     setShowResults(false);
   };
 
-  const onSubmit = async (data: AwardTitleType) => {
+  const onSubmit = async (data: AwardAchievementType) => {
     if (!user) {
       toast.error("You must be logged in as an admin to perform this action.");
       return;
@@ -63,14 +70,14 @@ export default function AssignTitleModal({ onClose }: { onClose: () => void }) {
     const loadingToast = toast.loading("Processing your request...");
 
     try {
-      const { success, message } = await awardTitle(data);
+      const { success, message } = await awardAchievements(data);
 
       if (success) {
         toast.success(message, { id: loadingToast });
         reset();
         onClose();
       } else {
-        toast.error(message || "Failed to award title.", {
+        toast.error(message || "Failed to award achievement.", {
           id: loadingToast,
         });
       }
@@ -89,13 +96,12 @@ export default function AssignTitleModal({ onClose }: { onClose: () => void }) {
         onClick={onClose}
       />
 
-      <div className="title flex flex-col w-[75%]">
+      <div className="flex flex-col w-[80%]">
         <p className="text-tertiary font-poppins text-2xl font-bold">
-          Assign Titles
+          Grant Achievement
         </p>
         <p className="text-white font-poppins text-xs">
-          {" "}
-          Grant special titles to students in recognition of their achievements.
+          Award achievement that highlight student accomplishments.
         </p>
       </div>
 
@@ -157,18 +163,18 @@ export default function AssignTitleModal({ onClose }: { onClose: () => void }) {
 
         {/* 🏫 Title Selector */}
         <div className="flex flex-col gap-2">
-          <label className="text-xs text-tertiary">Select Title</label>
+          <label className="text-xs text-tertiary">Select Achievement</label>
           <Controller
-            name="title_id"
+            name="achievement_id"
             control={control}
             render={({ field }) => (
               <Select
                 value={field.value || ""}
                 onChange={field.onChange}
-                error={errors?.title_id?.message}
-                placeholder="Title"
+                error={errors?.achievement_id?.message}
+                placeholder="Achievement"
                 className="bg-main border-none px-3 text-sm"
-                options={titles}
+                options={achievement}
                 type="club"
               />
             )}
