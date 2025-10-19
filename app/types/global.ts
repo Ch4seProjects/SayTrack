@@ -12,7 +12,9 @@ export interface Achievement {
 }
 
 export interface Title {
-  title: string;
+  id: string;
+  name: string;
+  description: string;
 }
 
 export interface Club {

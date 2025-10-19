@@ -364,7 +364,7 @@ export default function Home() {
               title="Assign Titles"
               description="Assign titles to recognize outstanding achievements or milestones."
               icon={<Star className="text-tertiary" size={24} />}
-              isComingSoon
+              onClick={() => showModal("AWARD_TITLES", {})}
             />
             <ActionTile
               title="Grant Achievements"

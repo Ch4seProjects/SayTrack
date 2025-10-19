@@ -166,6 +166,19 @@ export const notificationSchema = yup.object().shape({
     .transform((v) => (v === "" ? null : v)),
 });
 
+export const awardTitleSchema = yup.object().shape({
+  student: yup
+    .object({
+      id: yup.string().required(),
+      name: yup.string().required(),
+    })
+    .required("Please select a student"),
+  title_id: yup
+    .string()
+    .transform((v) => (v === "" ? undefined : v))
+    .required("Title is required"),
+});
+
 export type SignUpType = yup.InferType<typeof signUpSchema>;
 export type LoginType = yup.InferType<typeof loginSchema>;
 export type GivePointsType = yup.InferType<typeof givePointsSchema>;
@@ -174,3 +187,4 @@ export type AddTitleType = yup.InferType<typeof titleSchema>;
 export type AddAchievementType = yup.InferType<typeof achievementSchema>;
 export type AddNotificationType = yup.InferType<typeof notificationSchema>;
 export type AddClubType = yup.InferType<typeof clubSchema>;
+export type AwardTitleType = yup.InferType<typeof awardTitleSchema>;

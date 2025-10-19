@@ -11,6 +11,7 @@ import AddTitleModal from "../components/Modals/AddTitleModal";
 import AddNotificationModal from "../components/Modals/AddNotificationModal";
 import AddAchievementModal from "../components/Modals/AddAchievementModal";
 import AddClubModal from "../components/Modals/AddClubModal";
+import AssignTitleModal from "../components/Modals/AssignTitleModal";
 
 export const ModalProvider = ({ children }: { children: ReactNode }) => {
   const [modal, setModal] = useState<ModalData | null>(null);
@@ -55,6 +56,9 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
         )}
         {modal?.type === "ADD_CLUB" && (
           <AddClubModal {...modal.props} onClose={closeModal} />
+        )}
+        {modal?.type === "AWARD_TITLES" && (
+          <AssignTitleModal {...modal.props} onClose={closeModal} />
         )}
       </Modal>
     </ModalContext.Provider>
