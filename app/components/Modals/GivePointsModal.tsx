@@ -31,6 +31,7 @@ export default function GivePointsModal({ onClose }: { onClose: () => void }) {
     register,
     handleSubmit,
     setValue,
+    watch,
     control,
     formState: { errors, isSubmitting },
   } = useForm<GivePointsType>({
@@ -207,12 +208,24 @@ export default function GivePointsModal({ onClose }: { onClose: () => void }) {
         <div className="flex flex-col gap-2">
           <label className="text-xs text-tertiary">Enter points</label>
 
-          <input
-            type="number"
-            placeholder="Points"
-            {...register("points")}
-            className="bg-main h-14 rounded-lg px-3 text-white font-poppins text-sm outline-none focus:ring-2 focus:ring-main/50"
-          />
+          <div className="grid grid-cols-4 gap-2">
+            {[1, 2, 3, 4].map((pt) => (
+              <button
+                key={pt}
+                type="button"
+                onClick={() => setValue("points", pt)}
+                className={`p-4 rounded-md text-center font-poppins text-sm transition 
+          ${
+            watch("points") === pt
+              ? "bg-secondary text-white ring-2 ring-main/100"
+              : "bg-main text-white hover:bg-main/70"
+          }`}
+              >
+                {pt}pt{pt > 1 ? "s" : ""}
+              </button>
+            ))}
+          </div>
+
           {errors.points && (
             <p className="text-red-400 text-[10px] font-poppins">
               {errors.points.message}
