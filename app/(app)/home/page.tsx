@@ -9,6 +9,7 @@ import {
   ChevronDown,
   Trophy,
   Flag,
+  User,
 } from "lucide-react";
 import { SelectComponent } from "@/app/components/Select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -379,6 +380,12 @@ export default function Home() {
         <div className="flex flex-col gap-2">
           <p className="font-poppins text-xl text-white">Manage</p>
           <div className="grid grid-cols-2 gap-4">
+            <ActionTile
+              title="Manage Users"
+              description="Oversee user accounts and manage their roles."
+              icon={<User className="text-tertiary" size={24} />}
+              onClick={() => showModal("MANAGE_USERS", {})}
+            />
             <ActionTile
               title="Manage Notifications"
               description="Send notifications to keep everyone updated."

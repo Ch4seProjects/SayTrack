@@ -41,7 +41,7 @@ export default function AddTitleModal({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <div className="border--2 border-red-600 relative py-2 flex flex-col gap-8">
+    <div className="relative py-2 flex flex-col gap-8">
       <X
         className="absolute top-2 right-3 text-tertiary text-lg cursor-pointer hover:opacity-80"
         onClick={onClose}

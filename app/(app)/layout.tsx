@@ -28,7 +28,9 @@ export default function AppLayout({
 
   // Filter out the leaderboards nav for admin users
   const filteredNavItems = isAdmin
-    ? navItems.filter((item) => item.key !== "leaderboards")
+    ? navItems.filter(
+        (item) => item.key !== "leaderboards" && item.key !== "search"
+      )
     : navItems;
 
   const isActive = (route: string, key: string) => {
