@@ -11,11 +11,13 @@ import { updateProfile } from "@/app/services/updateProfile";
 import { editProfileSchema } from "@/app/utils/schema";
 import { X } from "lucide-react";
 import { SECTIONS_OBJECT } from "@/app/lib/constants";
+import { uploadAvatar } from "@/app/utils/uploadAvatar";
 
 type EditProfileForm = {
   name: string;
   year?: string;
   section?: string;
+  avatar_url?: string | File | null;
 };
 
 export default function EditProfileModal({ onClose }: { onClose: () => void }) {
@@ -26,6 +28,8 @@ export default function EditProfileModal({ onClose }: { onClose: () => void }) {
     register,
     handleSubmit,
     control,
+    watch,
+    setValue,
     formState: { errors, isDirty },
   } = useForm<EditProfileForm>({
     resolver: yupResolver(editProfileSchema) as any,
@@ -33,6 +37,7 @@ export default function EditProfileModal({ onClose }: { onClose: () => void }) {
       name: user?.name || "",
       year: user?.year ? String(user.year) : "",
       section: user?.section || "",
+      avatar_url: user?.avatar_url || "",
     },
   });
 
@@ -47,7 +52,20 @@ export default function EditProfileModal({ onClose }: { onClose: () => void }) {
     setIsSubmitting(true);
 
     try {
-      const { success, message } = await updateProfile(userId, data);
+      if (data.avatar_url instanceof File) {
+        const publicUrl = await uploadAvatar(userId, data.avatar_url);
+        data.avatar_url = publicUrl;
+      }
+
+      const updates = {
+        name: data.name,
+        year: data.year,
+        section: data.section,
+        avatar_url:
+          typeof data.avatar_url === "string" ? data.avatar_url : undefined,
+      };
+
+      const { success, message } = await updateProfile(userId, updates);
 
       if (success) {
         toast.success(message, {
@@ -95,6 +113,55 @@ export default function EditProfileModal({ onClose }: { onClose: () => void }) {
 
       {/* Form Fields */}
       <div className="flex flex-col gap-4 w-full">
+        <div className="flex flex-col items-center gap-2">
+          <label className="text-tertiary text-sm font-poppins">
+            Profile Picture
+          </label>
+
+          {(() => {
+            const avatarValue = watch("avatar_url");
+            const previewUrl =
+              avatarValue instanceof File
+                ? URL.createObjectURL(avatarValue)
+                : typeof avatarValue === "string" &&
+                  avatarValue.startsWith("http")
+                ? avatarValue
+                : "/default-avatar.png";
+
+            return (
+              <div className="relative w-24 h-24">
+                <img
+                  src={previewUrl}
+                  alt="Profile preview"
+                  className="w-24 h-24 rounded-full object-cover border-2 border-main"
+                />
+                <input
+                  id="avatar_url"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      console.log("Selected avatar file:", file);
+                      setValue("avatar_url", file, {
+                        shouldValidate: true,
+                        shouldDirty: true,
+                      });
+                    }
+                  }}
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                />
+              </div>
+            );
+          })()}
+
+          {errors.avatar_url && (
+            <p className="text-red-400 text-xs font-poppins">
+              {errors.avatar_url.message as string}
+            </p>
+          )}
+        </div>
+
         <div className="flex flex-col gap-1">
           <label htmlFor="name" className="text-tertiary text-sm font-poppins">
             Name

@@ -73,7 +73,15 @@ export default function Search() {
             className="flex gap-2 items-center p-2 hover:bg-gray-800 rounded-md transition"
           >
             <div className="w-10 h-10 bg-main rounded-full border-2 flex justify-center items-center">
-              <User className="text-white" />
+              {user?.avatar_url ? (
+                <img
+                  src={user?.avatar_url}
+                  alt="User avatar"
+                  className="h-full w-full object-cover rounded-full"
+                />
+              ) : (
+                <User className="text-white" />
+              )}
             </div>
             <div className="flex flex-col">
               <p className="text-white font-poppins font-medium text-sm">

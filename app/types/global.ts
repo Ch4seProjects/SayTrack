@@ -43,6 +43,7 @@ export interface User {
   participation_points: number;
   character_points: number;
   created_at: string;
+  avatar_url: string;
 }
 
 export interface UserMeta extends User {
@@ -61,6 +62,7 @@ export interface Profile {
   character_points: number;
   participation_points: number;
   totalPoints: number;
+  avatar_url: string;
 }
 
 export interface Notification {

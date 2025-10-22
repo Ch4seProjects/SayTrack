@@ -87,10 +87,19 @@ export default function Home() {
               fill="white"
               onClick={() => router.push("/notifications")}
             />
-            <CircleUserRound
-              className="w-7 h-7 text-white rounded-full"
-              onClick={() => router.push("/profile")}
-            />
+            {userMeta?.avatar_url ? (
+              <img
+                src={userMeta.avatar_url}
+                alt="User avatar"
+                className="w-7 h-7 object-cover rounded-full"
+                onClick={() => router.push("/profile")}
+              />
+            ) : (
+              <CircleUserRound
+                className="w-7 h-7 text-white rounded-full"
+                onClick={() => router.push("/profile")}
+              />
+            )}
           </div>
         </div>
 

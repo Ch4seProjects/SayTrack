@@ -6,6 +6,7 @@ export async function updateProfile(
     name?: string;
     year?: string;
     section?: string;
+    avatar_url?: string;
   }
 ) {
   const supabase = getSupabaseClient();
@@ -20,14 +21,20 @@ export async function updateProfile(
       throw new Error("Name cannot be empty");
     }
 
+    const payload: Record<string, any> = {
+      name: updates.name.trim(),
+      year: updates.year || null,
+      section: updates.section || null,
+    };
+
+    if (updates.avatar_url) {
+      payload.avatar_url = updates.avatar_url;
+    }
+
     // Update the user's profile
     const { error: updateError } = await supabase
       .from("profiles")
-      .update({
-        name: updates.name.trim(),
-        year: updates.year || null,
-        section: updates.section || null,
-      })
+      .update(payload)
       .eq("id", userId);
 
     if (updateError) throw updateError;

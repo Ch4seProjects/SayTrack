@@ -108,7 +108,15 @@ export default function Profile({ params }: ProfilePageProps) {
       {/* Profile Info */}
       <div className="flex gap-6">
         <div className="h-28 w-28 bg-main rounded-full flex justify-center items-center">
-          <User className="h-16 w-16 text-white" />
+          {profile?.avatar_url ? (
+            <img
+              src={profile.avatar_url}
+              alt="User avatar"
+              className="h-full w-full object-cover rounded-full"
+            />
+          ) : (
+            <User className="h-16 w-16 text-white" />
+          )}
         </div>
         <div className="font-poppins text-white text-xs flex-1 gap-1 flex flex-col">
           <p className="text-xl font-medium">{profile.name}</p>

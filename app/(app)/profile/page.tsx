@@ -52,6 +52,7 @@ export default function Profile() {
   };
 
   const renderIsStudentLayout = () => {
+    console.log("avatarUrl: ", userMeta.avatar_url);
     return (
       <div className="px-6 py-12 flex flex-col gap-8">
         {/* Header */}
@@ -67,8 +68,16 @@ export default function Profile() {
 
         {/* Profile Information */}
         <div className="flex gap-6">
-          <div className="h-28 w-28 bg-main rounded-full flex justify-center items-center">
-            <User className="h-16 w-16 text-white" />
+          <div className="h-28 w-28 rounded-full flex justify-center items-center bg-main overflow-hidden">
+            {user?.avatar_url ? (
+              <img
+                src={userMeta.avatar_url}
+                alt="User avatar"
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <User className="h-16 w-16 text-white" />
+            )}
           </div>
           <div className=" font-poppins text-white text-xs flex-1 gap-1 flex flex-col">
             <p className="text-xl font-medium">{userMeta.name}</p>

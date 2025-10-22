@@ -83,7 +83,15 @@ export default function Leaderboards() {
                   className={`flex flex-col items-center gap-1 ${marginTop}`}
                 >
                   <div className="h-24 w-24 bg-white rounded-full flex justify-center items-center mb-2 relative">
-                    <User className="h-16 w-16 text-main" />
+                    {user?.avatar_url ? (
+                      <img
+                        src={user?.avatar_url}
+                        alt="User avatar"
+                        className="h-full w-full object-cover rounded-full"
+                      />
+                    ) : (
+                      <User className="h-16 w-16 text-main" />
+                    )}
                     <div
                       className={`h-6 w-6 left-0 top-0 ${medalColors[index]} rounded-full absolute`}
                     />
@@ -119,7 +127,15 @@ export default function Leaderboards() {
               <p className="font-poppins text-sm font-medium">{index + 4}</p>
               <div className="flex gap-2 items-center">
                 <div className="h-10 w-10 bg-main rounded-full flex justify-center items-center">
-                  <User className="text-white" />
+                  {user?.avatar_url ? (
+                    <img
+                      src={user?.avatar_url}
+                      alt="User avatar"
+                      className="h-full w-full object-cover rounded-full"
+                    />
+                  ) : (
+                    <User className="text-main" />
+                  )}
                 </div>
                 <div className="flex flex-col">
                   <p className="font-poppins font-medium text-sm">

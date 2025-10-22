@@ -9,7 +9,7 @@ export async function searchService(query: string): Promise<Profile[]> {
 
   const { data, error } = await supabase
     .from("profiles")
-    .select("id, name, section, year, email")
+    .select("id, name, section, year, email, avatar_url")
     .ilike("name", `%${query}%`)
     .neq("type", "admin")
     .limit(10);

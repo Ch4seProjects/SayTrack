@@ -6,11 +6,18 @@ import { BeatLoader } from "react-spinners";
 import debounce from "lodash/debounce";
 import { useSearchProfiles } from "@/app/hooks/useSearchProfiles";
 import { useModalContext } from "@/app/context/ModalContext";
+import { useSupabase } from "@/app/context/SupabaseProvider";
 
 export default function ManageUsersModal({ onClose }: { onClose: () => void }) {
+  const { user } = useSupabase();
   const [inputValue, setInputValue] = useState("");
   const [query, setQuery] = useState("");
   const { showModal } = useModalContext();
+
+  const isSuperAdmin = useMemo(
+    () => user?.email === process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL,
+    [user]
+  );
 
   const debouncedSetQuery = useMemo(
     () =>
@@ -83,16 +90,18 @@ export default function ManageUsersModal({ onClose }: { onClose: () => void }) {
               </p>
               <p className="text-gray-300 font-poppins text-[10px]">{`${user.section} ${user.year}`}</p>
             </div>
-            <Trash
-              className="text-red-600 absolute right-0"
-              size={20}
-              onClick={() =>
-                showModal("DELETE_USER", {
-                  userId: user.id,
-                  userName: user.name,
-                })
-              }
-            />
+            {isSuperAdmin && (
+              <Trash
+                className="text-red-600 absolute right-0"
+                size={20}
+                onClick={() =>
+                  showModal("DELETE_USER", {
+                    userId: user.id,
+                    userName: user.name,
+                  })
+                }
+              />
+            )}
           </div>
         ))}
       </div>

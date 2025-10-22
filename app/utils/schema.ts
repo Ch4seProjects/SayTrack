@@ -105,6 +105,21 @@ export const editProfileSchema = yup.object({
     .nullable()
     .oneOf(SECTIONS, "Invalid section")
     .optional(),
+  avatar_url: yup
+    .mixed<File | string>()
+    .test("is-valid-avatar", "Avatar must be a valid file or URL", (value) => {
+      if (!value) return true; // optional
+      if (typeof value === "string") return /^https?:\/\//.test(value); // must be valid URL
+      if (value instanceof File) {
+        // check file type and size
+        const validTypes = ["image/jpeg", "image/png", "image/webp"];
+        const maxSize = 2 * 1024 * 1024; // 2 MB
+        return validTypes.includes(value.type) && value.size <= maxSize;
+      }
+      return false;
+    })
+    .nullable()
+    .optional(),
 });
 
 export const clubSchema = yup.object().shape({
