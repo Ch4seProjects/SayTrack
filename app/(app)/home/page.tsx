@@ -10,6 +10,7 @@ import {
   Trophy,
   Flag,
   User,
+  Check,
 } from "lucide-react";
 import { SelectComponent } from "@/app/components/Select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -401,6 +402,19 @@ export default function Home() {
               icon={<Trophy className="text-tertiary" size={24} />}
               onClick={() => showModal("ADD_NOTIFICATION", {})}
             />
+            <ActionTile
+              title="Approve Signups"
+              description="Review pending user registrations."
+              icon={<Check className="text-tertiary" size={24} />}
+              onClick={() => showModal("APPROVE_SIGNUPS", {})}
+            />
+          </div>
+        </div>
+
+        {/* Admin Collections */}
+        <div className="flex flex-col gap-2">
+          <p className="font-poppins text-xl text-white">Collections</p>
+          <div className="grid grid-cols-2 gap-4">
             <ActionTile
               title="Manage Title Collection"
               description="Add available titles for users."

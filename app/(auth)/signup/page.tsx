@@ -48,6 +48,7 @@ export default function Signup() {
           type: data.type,
           year: data.year,
           section: data.section,
+          status: "pending",
         },
       },
     });

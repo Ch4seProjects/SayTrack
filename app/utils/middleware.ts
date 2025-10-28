@@ -1,9 +1,8 @@
-// src/utils/supabase/middleware.ts
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const publicRoutes = ["/", "/login", "/signup"];
+const publicRoutes = ["/", "/login", "/signup", "/pending", "/rejected"];
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
@@ -17,7 +16,6 @@ export async function updateSession(request: NextRequest) {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet) {
-          // Mirror examples in the docs: write cookies to the request and the response
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           );
@@ -30,14 +28,42 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  // IMPORTANT: the docs recommend using auth.getClaims() / auth.getUser() here
   const { data } = await supabase.auth.getClaims();
   const user = data?.claims;
+  const pathname = request.nextUrl.pathname;
 
-  if (!user && !publicRoutes.includes(request.nextUrl.pathname)) {
+  if (!user && !publicRoutes.includes(pathname)) {
     const url = request.nextUrl.clone();
     url.pathname = "/"; // redirect to login
     return NextResponse.redirect(url);
+  }
+
+  // If logged in, fetch profile status
+  if (user?.sub) {
+    const { data: profile, error } = await supabase
+      .from("profiles")
+      .select("status")
+      .eq("id", user.sub)
+      .single();
+
+    if (error) {
+      console.error("Error fetching profile status:", error.message);
+      return response;
+    }
+
+    if (profile?.status === "pending") {
+      await supabase.auth.signOut();
+      const url = request.nextUrl.clone();
+      url.pathname = "/pending";
+      return NextResponse.redirect(url);
+    }
+
+    if (profile?.status === "rejected") {
+      await supabase.auth.signOut();
+      const url = request.nextUrl.clone();
+      url.pathname = "/rejected";
+      return NextResponse.redirect(url);
+    }
   }
 
   return response;

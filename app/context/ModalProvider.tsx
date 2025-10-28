@@ -15,6 +15,7 @@ import AssignTitleModal from "../components/Modals/AssignTitleModal";
 import AssignAchievementsModal from "../components/Modals/AssignAchievementsModal";
 import ManageUsersModal from "../components/Modals/ManageUsersModal";
 import DeleteUserModal from "../components/Modals/DeleteUserModal";
+import ApproveSignups from "../components/Modals/ApproveSignups";
 
 export const ModalProvider = ({ children }: { children: ReactNode }) => {
   const [modal, setModal] = useState<ModalData | null>(null);
@@ -33,7 +34,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
         isOpen={!!modal}
         onRequestClose={closeModal}
         ariaHideApp={false}
-        overlayClassName="fixed inset-0 bg-black/60 flex items-center justify-center z-50"
+        overlayClassName="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
         className="bg-secondary rounded-lg p-4 w-[90%] max-w-sm text-white shadow-lg relative outline-none"
       >
         {modal?.type === "GIVE_POINTS" && (
@@ -71,6 +72,9 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
         )}
         {modal?.type === "DELETE_USER" && (
           <DeleteUserModal {...modal.props} onClose={closeModal} />
+        )}
+        {modal?.type === "APPROVE_SIGNUPS" && (
+          <ApproveSignups {...modal.props} onClose={closeModal} />
         )}
       </Modal>
     </ModalContext.Provider>
