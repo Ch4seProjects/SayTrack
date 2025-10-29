@@ -43,6 +43,15 @@ export const signUpSchema = yup.object({
       /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{8,}$/,
       "Password must be at least 8 characters long, include a number, a symbol, and an uppercase letter"
     ),
+  upload_url: yup
+    .mixed<File>()
+    .required("Student ID is required")
+    .test("fileSize", "File size must be less than 5MB", (file) =>
+      file ? file.size <= 5 * 1024 * 1024 : false
+    )
+    .test("fileType", "Only PNG or JPG images are allowed", (file) =>
+      file ? ["image/png", "image/jpeg"].includes(file.type) : false
+    ),
 });
 
 export const loginSchema = yup.object({

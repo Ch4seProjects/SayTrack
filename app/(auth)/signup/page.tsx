@@ -15,6 +15,7 @@ import { signUpSchema, SignUpType } from "@/app/utils/schema";
 import { ACCOUNT_TYPES } from "@/app/lib/constants";
 import { getSupabaseClient } from "@/app/utils/client";
 import { SECTIONS_OBJECT } from "@/app/lib/constants";
+import UploadInput from "@/app/components/UploadInput";
 
 export default function Signup() {
   const supabase = getSupabaseClient();
@@ -39,30 +40,52 @@ export default function Signup() {
   const onSubmit = async (data: SignUpType) => {
     setLoading(true);
 
-    const { data: signUpData, error } = await supabase.auth.signUp({
-      email: data.email,
-      password: data.password,
-      options: {
-        data: {
-          name: data.name,
-          type: data.type,
-          year: data.year,
-          section: data.section,
-          status: "pending",
+    try {
+      const { data: signUpData, error } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
+        options: {
+          data: {
+            name: data.name,
+            type: data.type,
+            year: data.year,
+            section: data.section,
+            status: "pending",
+          },
         },
-      },
-    });
+      });
 
-    setLoading(false);
-    console.log("signUpData", signUpData);
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
 
-    if (error) {
-      toast.error(error.message);
-      return;
+      if (data.upload_url instanceof File) {
+        const formData = new FormData();
+        formData.append("file", data.upload_url);
+        formData.append("name", data.name);
+        formData.append("email", data.email);
+        formData.append("type", data.type);
+        formData.append("year", data.year ?? "");
+        formData.append("section", data.section ?? "");
+
+        const res = await fetch("/api/sendUploadEmail", {
+          method: "POST",
+          body: formData,
+        });
+
+        const result = await res.json();
+        console.log("Email API result:", result);
+      }
+
+      toast.success("Signup successful!");
+      router.push("/login");
+    } catch (err) {
+      console.error("Signup failed:", err);
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
-
-    toast.success("Signup Successful");
-    router.push("/login");
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
@@ -90,6 +113,13 @@ export default function Signup() {
               </TabsList>
             </Tabs>
           </div>
+        )}
+      />
+      <Controller
+        name="upload_url"
+        control={control}
+        render={({ field }) => (
+          <UploadInput field={field} error={errors.upload_url?.message} />
         )}
       />
       <Input

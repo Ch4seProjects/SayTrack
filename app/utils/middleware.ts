@@ -32,6 +32,11 @@ export async function updateSession(request: NextRequest) {
   const user = data?.claims;
   const pathname = request.nextUrl.pathname;
 
+  //  Skip middleware for API routes
+  if (pathname.startsWith("/api")) {
+    return response;
+  }
+
   if (!user && !publicRoutes.includes(pathname)) {
     const url = request.nextUrl.clone();
     url.pathname = "/"; // redirect to login
