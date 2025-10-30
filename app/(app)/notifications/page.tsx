@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useNotificationContext } from "@/app/context/NotificationContext";
-import { NOTIFICATION_CATEGORIES } from "@/app/lib/constants";
+import { NOTIFICATION_CATEGORIES } from "@/lib/constants";
 import { Bell } from "lucide-react";
 import { BeatLoader } from "react-spinners";
 

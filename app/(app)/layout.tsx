@@ -5,8 +5,6 @@ import { House, Trophy, Search, User, Bell } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useIsAdmin } from "../hooks/useIsAdmin";
-import { NotificationProvider } from "../context/NotificationProvider";
-import { useSupabase } from "../context/SupabaseProvider";
 
 const navItems = [
   { icon: House, route: "/home", key: "home" },
@@ -24,7 +22,6 @@ export default function AppLayout({
   const router = useRouter();
   const pathname = usePathname();
   const isAdmin = useIsAdmin();
-  const { user } = useSupabase();
 
   // Filter out the leaderboards nav for admin users
   const filteredNavItems = isAdmin
@@ -48,11 +45,7 @@ export default function AppLayout({
 
   return (
     <main className="bg-secondary flex flex-col h-screen">
-      <div className="content flex-1 overflow-auto">
-        <NotificationProvider userId={user?.id}>
-          {children}
-        </NotificationProvider>
-      </div>
+      <div className="content flex-1 overflow-auto">{children}</div>
 
       <div className="bottom-navigation flex justify-around p-4 bg-gradient-to-t from-secondary to-main">
         {filteredNavItems.map(({ icon: Icon, route, key }) => (

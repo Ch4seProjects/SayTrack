@@ -10,7 +10,7 @@ import { useSupabase } from "@/app/context/SupabaseProvider";
 import { updateProfile } from "@/app/services/updateProfile";
 import { editProfileSchema } from "@/app/utils/schema";
 import { X } from "lucide-react";
-import { SECTIONS_OBJECT } from "@/app/lib/constants";
+import { SECTIONS_OBJECT } from "@/lib/constants";
 import { uploadAvatar } from "@/app/utils/uploadAvatar";
 
 type EditProfileForm = {

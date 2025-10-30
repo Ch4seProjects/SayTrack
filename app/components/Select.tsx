@@ -6,7 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SECTIONS } from "../lib/constants";
+import { SECTIONS } from "../../lib/constants";
 import { cn } from "@/lib/utils";
 import { Club } from "../types/global";
 

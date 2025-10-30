@@ -1,7 +1,7 @@
 "use client";
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LEADERBOARD_CATEGORIES } from "@/app/lib/constants";
+import { LEADERBOARD_CATEGORIES } from "@/lib/constants";
 import Link from "next/link";
 import { User } from "lucide-react";
 import { useLeaderboards } from "@/app/context/LeaderboardProvider";

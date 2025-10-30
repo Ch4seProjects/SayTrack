@@ -53,9 +53,7 @@ export default function UploadInput({ field, error }: UploadInputProps) {
               <Plus className="text-primary" size={24} />
             </div>
             <div className="text-center">
-              <p className="text-xs font-semibold text-gray-700">
-                Upload Student ID
-              </p>
+              <p className="text-xs font-semibold text-gray-700">Upload ID</p>
               <p className="text-[10px] text-gray-500">(PNG, JPG, up to 5MB)</p>
             </div>
           </>

@@ -1,5 +1,5 @@
 import * as yup from "yup";
-import { SECTIONS, ACCOUNT_TYPES } from "../lib/constants";
+import { SECTIONS, ACCOUNT_TYPES } from "../../lib/constants";
 
 export const signUpSchema = yup.object({
   type: yup
@@ -45,7 +45,7 @@ export const signUpSchema = yup.object({
     ),
   upload_url: yup
     .mixed<File>()
-    .required("Student ID is required")
+    .required("ID is required")
     .test("fileSize", "File size must be less than 5MB", (file) =>
       file ? file.size <= 5 * 1024 * 1024 : false
     )

@@ -12,9 +12,9 @@ import { Button } from "@/app/components/Button";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { signUpSchema, SignUpType } from "@/app/utils/schema";
-import { ACCOUNT_TYPES } from "@/app/lib/constants";
+import { ACCOUNT_TYPES } from "@/lib/constants";
 import { getSupabaseClient } from "@/app/utils/client";
-import { SECTIONS_OBJECT } from "@/app/lib/constants";
+import { SECTIONS_OBJECT } from "@/lib/constants";
 import UploadInput from "@/app/components/UploadInput";
 
 export default function Signup() {

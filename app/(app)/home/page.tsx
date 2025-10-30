@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { SelectComponent } from "@/app/components/Select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LEADERBOARD_CATEGORIES } from "@/app/lib/constants";
+import { LEADERBOARD_CATEGORIES } from "@/lib/constants";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useUserMeta } from "@/app/hooks/useUserMeta";
