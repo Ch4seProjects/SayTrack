@@ -78,17 +78,37 @@ export interface Notification {
 
 export interface RawUserClub {
   id: string;
+  user_id: string;
   role: string;
   joined_at: string;
-  club: Club;
+  status?: "pending" | "joined" | "rejected";
+  club: {
+    id: string;
+    name: string;
+    description?: string;
+  };
 }
 
 export interface UserClub {
+  user_id: string;
   club_id: string;
   name?: string;
   description?: string;
   role?: string;
   joined_at?: string;
+  status?: string;
+
+  // Relations
+  user?: {
+    id: string;
+    name?: string;
+    email?: string;
+  };
+  club?: {
+    id: string;
+    name?: string;
+    description?: string;
+  };
 }
 
 export type RawUserTitle = {

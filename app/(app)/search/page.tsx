@@ -107,9 +107,11 @@ export default function Search() {
               </p>
               <div className="club-container flex flex-col gap-3">
                 {clubs.map((club) => {
-                  const isJoined = joinedClubs.some(
+                  const userClub = joinedClubs.find(
                     (joined) => joined.club_id === club.id
                   );
+
+                  const status = userClub?.status;
 
                   return (
                     <div
@@ -119,8 +121,12 @@ export default function Search() {
                       <div className="flex justify-center items-center gap-2 max-w-[70%]">
                         <div
                           className={`club-logo ${
-                            isJoined ? "bg-main/40" : "bg-main"
-                          }  flex items-center justify-center rounded-md p-4`}
+                            status === "joined"
+                              ? "bg-main/40"
+                              : status === "pending"
+                              ? "bg-yellow-500/40"
+                              : "bg-main"
+                          } flex items-center justify-center rounded-md p-4`}
                         >
                           <Flag className="text-white" />
                         </div>
@@ -133,13 +139,17 @@ export default function Search() {
                           </p>
                         </div>
                       </div>
-                      {isJoined ? (
+                      {status === "joined" ? (
                         <p className="font-poppins text-tertiary/50 text-xs uppercase">
                           Joined
                         </p>
+                      ) : status === "pending" ? (
+                        <p className="font-poppins text-yellow-400/70 text-xs uppercase">
+                          Pending
+                        </p>
                       ) : (
                         <p
-                          className="font-poppins text-tertiary text-xs uppercase"
+                          className="font-poppins text-tertiary text-xs uppercase cursor-pointer hover:underline"
                           onClick={() =>
                             showModal("JOIN_CLUB", {
                               clubName: club.name,

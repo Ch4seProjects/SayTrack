@@ -16,6 +16,7 @@ import AssignAchievementsModal from "../components/Modals/AssignAchievementsModa
 import ManageUsersModal from "../components/Modals/ManageUsersModal";
 import DeleteUserModal from "../components/Modals/DeleteUserModal";
 import ApproveSignups from "../components/Modals/ApproveSignups";
+import ApproveClubJoins from "../components/Modals/ApproveClubJoins";
 
 export const ModalProvider = ({ children }: { children: ReactNode }) => {
   const [modal, setModal] = useState<ModalData | null>(null);
@@ -75,6 +76,9 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
         )}
         {modal?.type === "APPROVE_SIGNUPS" && (
           <ApproveSignups {...modal.props} onClose={closeModal} />
+        )}
+        {modal?.type === "APPROVE_CLUB_JOINS" && (
+          <ApproveClubJoins {...modal.props} onClose={closeModal} />
         )}
       </Modal>
     </ModalContext.Provider>

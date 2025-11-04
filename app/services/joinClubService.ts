@@ -13,6 +13,7 @@ export async function joinClub(userId: string, clubId: string) {
       club_id: clubId,
       role: "member",
       joined_at: new Date().toISOString(),
+      status: "pending",
     });
 
     if (insertError) throw insertError;

@@ -9,8 +9,10 @@ export async function fetchUserClubs(userId: string): Promise<UserClub[]> {
     .select(
       `
       id,
+      user_id,
       role,
       joined_at,
+      status,
       club:clubs (
         id,
         name,
@@ -26,10 +28,13 @@ export async function fetchUserClubs(userId: string): Promise<UserClub[]> {
   }
 
   return (data as RawUserClub[]).map((uc) => ({
+    id: uc.id,
+    user_id: uc.user_id,
     club_id: uc.club.id,
     name: uc.club.name,
     description: uc.club.description,
     role: uc.role,
     joined_at: uc.joined_at,
+    status: uc.status,
   }));
 }

@@ -40,7 +40,8 @@ export function NotificationProvider({
     const { data: memberships, error: membershipError } = await supabase
       .from("user_clubs")
       .select("club_id")
-      .eq("user_id", userId);
+      .eq("user_id", userId)
+      .eq("status", "joined");
 
     if (membershipError) throw membershipError;
 

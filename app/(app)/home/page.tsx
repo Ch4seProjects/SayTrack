@@ -55,10 +55,12 @@ export default function Home() {
   );
 
   const {
-    data: joinedClubs = [],
+    data: userClubs = [],
     isLoading: clubsLoading,
     error: clubsError,
   } = useUserClubs(user?.id);
+
+  const joinedClubs = userClubs.filter((club) => club.status === "joined");
 
   const {
     data: followings = [],
@@ -407,6 +409,12 @@ export default function Home() {
               description="Review pending user registrations."
               icon={<Check className="text-tertiary" size={24} />}
               onClick={() => showModal("APPROVE_SIGNUPS", {})}
+            />
+            <ActionTile
+              title="Approve Club Joins"
+              description="Review and approve pending club membership requests."
+              icon={<Check className="text-tertiary" size={24} />}
+              onClick={() => showModal("APPROVE_CLUB_JOINS", {})}
             />
           </div>
         </div>
