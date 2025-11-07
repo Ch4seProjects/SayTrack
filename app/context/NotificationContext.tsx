@@ -6,6 +6,7 @@ import { QueryObserverResult } from "@tanstack/react-query";
 export interface NotificationContextType {
   notifications: Notification[];
   loading: boolean;
+  hasTodayNotif: boolean;
   refresh: () => Promise<QueryObserverResult<any[], Error>>;
 }
 

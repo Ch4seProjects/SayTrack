@@ -25,7 +25,7 @@ export default function Notifications() {
     : clubNotifs;
 
   return (
-    <div className="px-6 py-12 flex flex-col gap-8">
+    <div className="px-6 pt-12 pb-6 flex flex-col gap-8 h-full">
       {/* Header */}
       <p className="text-white font-poppins text-xl">Notifications</p>
 
@@ -48,7 +48,7 @@ export default function Notifications() {
       )}
 
       {/* Notification Items */}
-      <div className="flex flex-col divide-y divide-white">
+      <div className="flex-1 flex flex-col gap-2 overflow-y-auto">
         {loading ? (
           <BeatLoader
             color="#fff"
@@ -63,11 +63,23 @@ export default function Notifications() {
         ) : (
           filtered.map((notif) => (
             <div
-              className="flex justify-between gap-4 px-2 py-4"
+              className="flex justify-between gap-4 px-2 py-4 border-[1px] border-main rounded-lg"
               key={notif.id}
             >
               <div className="h-10 w-10 bg-main rounded-full flex justify-center items-center">
-                <Bell className="h-6 w-6 text-white" />
+                {notif.club_id ? (
+                  <span className="text-white font-poppins font-semibold text-xs">
+                    {notif.clubs?.name
+                      .split(" ")
+                      .map((word) => word[0])
+                      .filter((char) => /[A-Za-z]/.test(char))
+                      .join("")
+                      .slice(0, 2)
+                      .toUpperCase()}
+                  </span>
+                ) : (
+                  <Bell className="h-6 w-6 text-white" />
+                )}
               </div>
               <div className="flex flex-col flex-1">
                 {notif.club_id && (

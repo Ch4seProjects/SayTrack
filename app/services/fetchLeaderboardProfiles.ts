@@ -7,16 +7,20 @@ export async function fetchLeaderboardProfiles(): Promise<Profile[]> {
   const { data, error } = await supabase
     .from("profiles")
     .select(
-      "id, name, year, email, section, type, character_points, participation_points, avatar_url"
-    );
+      "id, name, year, email, section, type, status, character_points, participation_points, avatar_url"
+    )
+    .neq("status", "rejected"); // 👈 exclude rejected users
 
   if (error) {
     console.error("Error fetching profiles:", error);
     return [];
   }
 
+  // Filter again defensively in case of nulls
+  const filtered = (data || []).filter((u: Profile) => u.status !== "rejected");
+
   // Add total points
-  const withTotals = data.map((u: Profile) => ({
+  const withTotals = filtered.map((u: Profile) => ({
     ...u,
     totalPoints: (u.character_points ?? 0) + (u.participation_points ?? 0),
   }));

@@ -1,10 +1,15 @@
+import { BeatLoader } from "react-spinners";
+
 interface ActionTileProps {
   title: string;
-  description: string;
+  description?: string;
   icon: React.ReactNode;
   onClick?: () => void;
   isComingSoon?: boolean;
+  stat?: string;
+  isLoading?: boolean;
 }
+//  <BeatLoader color="#fff" size={8} aria-label="Loading Spinner" />
 
 export default function ActionTile({
   title,
@@ -12,7 +17,19 @@ export default function ActionTile({
   icon,
   onClick,
   isComingSoon = false,
+  stat,
+  isLoading = false,
 }: ActionTileProps) {
+  const renderStat = (isLoading: boolean) => {
+    if (isLoading) {
+      return <BeatLoader color="#fff" size={8} aria-label="Loading Spinner" />;
+    }
+
+    return (
+      <p className="font-poppins text-white font-semibold text-3xl">{stat}</p>
+    );
+  };
+
   return (
     <div
       className={`p-4 rounded-xl bg-main flex flex-col gap-4 relative transition-all duration-300 ${
@@ -23,8 +40,11 @@ export default function ActionTile({
       onClick={!isComingSoon ? onClick : undefined}
     >
       {/* Content */}
-      <div className="bg-secondary flex justify-center items-center w-12 h-12 rounded-xl">
-        {icon}
+      <div className="flex items-center gap-2">
+        <div className="bg-secondary flex justify-center items-center w-12 h-12 rounded-xl">
+          {icon}
+        </div>
+        {stat && renderStat(isLoading)}
       </div>
       <div className="flex flex-col gap-1">
         <p className="font-poppins text-xs text-tertiary">{title}</p>

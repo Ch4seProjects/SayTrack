@@ -72,7 +72,7 @@ export default function Search() {
             key={user.id}
             className="flex gap-2 items-center p-2 hover:bg-gray-800 rounded-md transition"
           >
-            <div className="w-10 h-10 bg-main rounded-full border-2 flex justify-center items-center">
+            <div className="w-10 h-10 bg-main rounded-full flex justify-center items-center">
               {user?.avatar_url ? (
                 <img
                   src={user?.avatar_url}
@@ -122,19 +122,39 @@ export default function Search() {
                         <div
                           className={`club-logo ${
                             status === "joined"
-                              ? "bg-main/40"
+                              ? "bg-main/40 text-white/50"
                               : status === "pending"
                               ? "bg-yellow-500/40"
                               : "bg-main"
-                          } flex items-center justify-center rounded-md p-4`}
+                          } flex items-center justify-center rounded-md min-w-12 py-3 text-white font-poppins font-semibold text-sm`}
                         >
-                          <Flag className="text-white" />
+                          {club.name
+                            ? club.name
+                                .split(" ")
+                                .map((word) => word[0])
+                                .filter((char) => /[A-Za-z]/.test(char))
+                                .join("")
+                                .slice(0, 2)
+                                .toUpperCase()
+                            : "?"}
                         </div>
                         <div className="flex flex-col">
-                          <p className="text-white font-poppins font-medium text-sm">
+                          <p
+                            className={`${
+                              status === "joined"
+                                ? "text-white/50"
+                                : "text-white"
+                            } font-poppins font-medium text-sm`}
+                          >
                             {club.name}
                           </p>
-                          <p className="text-gray-400 font-poppins text-xs line-clamp-1">
+                          <p
+                            className={`${
+                              status === "joined"
+                                ? "text-gray-400/50"
+                                : "text-gray-400"
+                            } font-poppins text-xs line-clamp-1`}
+                          >
                             {club.description}
                           </p>
                         </div>

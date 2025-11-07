@@ -63,6 +63,7 @@ export interface Profile {
   participation_points: number;
   totalPoints: number;
   avatar_url: string;
+  status: "approved" | "rejected" | "pending";
 }
 
 export interface Notification {
@@ -156,6 +157,7 @@ export interface RawUserFollow {
     id: string;
     name: string;
     section: string | null;
+    avatar_url?: string;
   };
 }
 

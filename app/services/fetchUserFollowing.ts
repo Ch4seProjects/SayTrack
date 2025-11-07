@@ -14,7 +14,8 @@ export async function fetchUserFollowing(
       following:profiles!user_follows_following_id_fkey (
         id,
         name,
-        section
+        section,
+        avatar_url
       )
     `
     )
@@ -30,6 +31,7 @@ export async function fetchUserFollowing(
     name: uf.following!.name,
     section: uf.following!.section,
     followed_at: uf.followed_at,
+    avatar_url: uf.following!.avatar_url,
   }));
 }
 

@@ -12,6 +12,7 @@ export async function searchService(query: string): Promise<Profile[]> {
     .select("id, name, section, year, email, avatar_url")
     .ilike("name", `%${query}%`)
     .neq("type", "admin")
+    .neq("status", "rejected")
     .limit(10);
 
   if (error) {

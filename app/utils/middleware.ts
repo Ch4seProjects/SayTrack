@@ -2,7 +2,17 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const publicRoutes = ["/", "/login", "/signup", "/pending", "/rejected"];
+const publicRoutes = [
+  "/",
+  "/login",
+  "/signup",
+  "/pending",
+  "/rejected",
+  "/manifest.json",
+  "/logo.png",
+  "/favicon.ico",
+  "/apple-touch-icon.png",
+];
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });

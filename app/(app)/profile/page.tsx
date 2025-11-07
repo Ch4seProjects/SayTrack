@@ -52,7 +52,6 @@ export default function Profile() {
   };
 
   const renderIsStudentLayout = () => {
-    console.log("avatarUrl: ", userMeta.avatar_url);
     return (
       <div className="px-6 py-12 flex flex-col gap-8">
         {/* Header */}

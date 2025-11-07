@@ -81,9 +81,19 @@ export function NotificationProvider({
     refetchOnWindowFocus: true,
   });
 
+  const hasTodayNotif = notifications.some((notif) => {
+    const createdAt = new Date(notif.created_at);
+    return createdAt.toDateString() === new Date().toDateString();
+  });
+
   return (
     <NotificationContext.Provider
-      value={{ notifications, loading: isLoading, refresh: refetch }}
+      value={{
+        notifications,
+        loading: isLoading,
+        refresh: refetch,
+        hasTodayNotif,
+      }}
     >
       {children}
     </NotificationContext.Provider>

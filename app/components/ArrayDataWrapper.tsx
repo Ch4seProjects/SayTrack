@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { BeatLoader } from "react-spinners";
-import { User, Flag, Medal, Star } from "lucide-react";
+import { User, Flag, Medal, Star, CircleUserRound } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface ArrayDataWrapperProps<
-  T extends { id: string; name?: string; title?: string }
+  T extends { id: string; name?: string; title?: string; avatar_url?: string }
 > {
   title: string;
   data: T[];
@@ -13,12 +13,12 @@ interface ArrayDataWrapperProps<
 }
 
 export default function ArrayDataWrapper<
-  T extends { id: string; name?: string; title?: string }
+  T extends { id: string; name?: string; title?: string; avatar_url?: string }
 >({ title, data, type, isLoading }: ArrayDataWrapperProps<T>) {
   const mapIcons = {
     achievements: <Medal className="text-white" />,
     titles: <Star className="text-white" />,
-    clubs: <Flag className="text-white" />,
+    // clubs: <Flag className="text-white" />,
   };
 
   return (
@@ -45,13 +45,49 @@ export default function ArrayDataWrapper<
                     href={`/profile/${item.id}`}
                     className="flex flex-col items-center gap-1 w-20"
                   >
-                    <div className="w-10 h-10 bg-main rounded-full border-2 flex justify-center items-center">
-                      <User className="text-white" />
-                    </div>
+                    {item.avatar_url ? (
+                      <img
+                        src={item.avatar_url}
+                        alt="User avatar"
+                        className="w-10 h-10 object-cover rounded-full"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 bg-main rounded-full border-2 flex justify-center items-center">
+                        <User className="text-white" />
+                      </div>
+                    )}
                     <p className="font-poppins text-white text-[10px] text-center">
                       {item.name || item.id}
                     </p>
                   </Link>
+                </motion.div>
+              );
+            }
+
+            if (type === "clubs") {
+              return (
+                <motion.div
+                  className="flex flex-col items-center gap-1 w-20"
+                  key={item.id ?? `${item.title || item.name}-${index}`}
+                  whileTap={{ scale: 0.96 }}
+                  transition={{ duration: 0.1 }}
+                >
+                  <div className="w-10 h-10 bg-main rounded-full border-2 flex justify-center items-center">
+                    <span className="text-white font-poppins font-semibold text-sm">
+                      {item.name
+                        ? item.name
+                            .split(" ")
+                            .map((word) => word[0])
+                            .filter((char) => /[A-Za-z]/.test(char))
+                            .join("")
+                            .slice(0, 2)
+                            .toUpperCase()
+                        : "?"}
+                    </span>
+                  </div>
+                  <p className="font-poppins text-white text-[10px] text-center truncate w-full">
+                    {item.title || item.name || "Unknown"}
+                  </p>
                 </motion.div>
               );
             }

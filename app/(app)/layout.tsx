@@ -1,7 +1,16 @@
 "use client";
 
 import "../styles/globals.css";
-import { House, Trophy, Search, User, Bell } from "lucide-react";
+import {
+  House,
+  Trophy,
+  Search,
+  User,
+  Bell,
+  UserCheck,
+  Library,
+  BetweenHorizonalStart,
+} from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useIsAdmin } from "../hooks/useIsAdmin";
@@ -11,6 +20,9 @@ const navItems = [
   { icon: Trophy, route: "/leaderboards", key: "leaderboards" },
   { icon: Search, route: "/search", key: "search" },
   { icon: Bell, route: "/notifications", key: "notifications" },
+  { icon: UserCheck, route: "/action", key: "action" },
+  { icon: BetweenHorizonalStart, route: "/manage", key: "manage" },
+  { icon: Library, route: "/collections", key: "collections" },
   { icon: User, route: "/profile", key: "profile" },
 ];
 
@@ -23,12 +35,22 @@ export default function AppLayout({
   const pathname = usePathname();
   const isAdmin = useIsAdmin();
 
+  const adminNavItems = navItems.filter(
+    (item) =>
+      item.key !== "leaderboards" &&
+      item.key !== "search" &&
+      item.key !== "notifications"
+  );
+
+  const studentNavItems = navItems.filter(
+    (item) =>
+      item.key !== "action" &&
+      item.key !== "manage" &&
+      item.key !== "collections"
+  );
+
   // Filter out the leaderboards nav for admin users
-  const filteredNavItems = isAdmin
-    ? navItems.filter(
-        (item) => item.key !== "leaderboards" && item.key !== "search"
-      )
-    : navItems;
+  const filteredNavItems = isAdmin ? adminNavItems : studentNavItems;
 
   const isActive = (route: string, key: string) => {
     if (key === "search") {
